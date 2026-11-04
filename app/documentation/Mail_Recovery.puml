@@ -1,0 +1,34 @@
+@startuml Mail_Recovery
+title ZTFramework 2.0 - Recuperação de Senha com CodeGenerator e PHPMailer
+
+actor "Usuário" as User
+participant "home.php\n(Aba Recuperar)" as View
+participant "recuperarSenha.php\n(Controller)" as Controller
+participant "CodeGenerator" as Gen
+participant "PasswordSecurity" as Sec
+participant "Usuario\n(Model)" as Model
+database "Banco de Dados" as DB
+participant "Mail\n(PHPMailer)" as Mail
+entity "SMTP Server / Log" as SMTP
+
+User -> View : Informa e-mail cadastrado
+View -> Controller : POST /recuperar-senha { email }
+
+Controller -> Gen : generatePassword(10)
+Gen --> Controller : novaSenha (ex: 'kX8#mP2!qZ')
+
+Controller -> Sec : hash(novaSenha)
+Sec --> Controller : hashBcrypt (com Salt e Pepper)
+
+Controller -> Model : redefinirSenhaPorEmail(email, novaSenha)
+Model -> DB : UPDATE usuarios SET senha = ? WHERE email = ?
+DB --> Model : OK
+
+Controller -> Mail : quickSend(email, assunto, htmlBody)
+Mail -> SMTP : Envia e-mail via PHPMailer (ou log em dev)
+SMTP --> Mail : Sucesso
+
+Controller --> View : JSON 200 { status: true, message: 'Senha enviada por e-mail' }
+View --> User : Exibe mensagem de sucesso na tela
+
+@enduml

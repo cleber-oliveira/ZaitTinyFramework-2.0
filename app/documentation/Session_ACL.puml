@@ -1,0 +1,44 @@
+@startuml Session_ACL
+title ZTFramework 2.0 - Fluxo de Autenticação e População da Sessão
+
+actor "Usuário" as User
+participant "login.php\n(View)" as View
+participant "loginAuth.php\n(API)" as Auth
+participant "Usuario\n(Model)" as Model
+database "Banco de Dados" as DB
+entity "$_SESSION['user']" as Session
+participant "Router" as Router
+
+User -> View : Acessa formulário de login (GET /login)
+View --> User : Renderiza HTML do formulário
+
+User -> Auth : Submete credenciais (POST /login)
+Auth -> Model : autenticar(email, senha)
+Model -> DB : SELECT * FROM usuarios WHERE email = ?
+DB --> Model : Registro do usuário com hash de senha
+
+alt Senha Correta (password_verify)
+    Model -> DB : Busca grupos do usuário (tabelas usuariosGrupos e grupos)
+    DB --> Model : Lista de grupos
+    Model -> DB : Busca permissões dos grupos (gruposPermissoes e permissoes)
+    DB --> Model : Lista de permissões
+
+    Model --> Auth : Retorna [idUsuario, nome, email, grupos, permissoes]
+    Auth -> Session : Armazena estrutura completa
+    Auth --> User : Retorna JSON 200 { status: true, redirect: '/dashboard' }
+else Senha Incorreta / Usuário Inexistente
+    Model --> Auth : Retorna null
+    Auth --> User : Retorna JSON 401 { status: false, error: 'Credenciais inválidas' }
+end
+
+== Requisições Subsequentes Protegidas ==
+
+User -> Router : GET /admin/configuracoes
+Router -> Session : Inspeciona $_SESSION['user'] em memória
+alt Possui Grupo / Permissão
+    Router --> User : Entrega recurso solicitado (200)
+else Não Autorizado
+    Router --> User : Retorna Erro 403 (Forbidden)
+end
+
+@enduml

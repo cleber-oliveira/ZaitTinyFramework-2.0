@@ -1,0 +1,76 @@
+@startuml Router
+title ZTFramework 2.0 - Diagrama de Atividades do Router
+
+start
+
+:Recebe Requisição HTTP;
+:Normaliza URI e extrai Método HTTP;
+
+if (URI inicia com /public/?) then (sim)
+  :Verifica se arquivo existe em public/;
+  if (Arquivo existe e está dentro de public/?) then (sim)
+    :Detecta MIME Type permitido no config.json;
+    :Emite Header Content-Type e envia arquivo;
+    stop
+  else (não)
+    :Retorna 404 (Static Not Found);
+    stop
+  endif
+endif
+
+if (URI existe no routes.json?) then (não)
+  :Retorna 404 (Route Not Found);
+  stop
+endif
+
+if (Método HTTP existe para a rota?) then (não)
+  if (Método == OPTIONS?) then (sim)
+    :Responde Preflight CORS 204;
+    stop
+  else (não)
+    :Retorna 405 (Method Not Allowed);
+    stop
+  endif
+endif
+
+:Aplica cabeçalhos CORS (se ativo);
+
+if (session.required == true?) then (sim)
+  if ($_SESSION['user'] existe e é válida?) then (não)
+    :Retorna 401 (Unauthorized);
+    stop
+  endif
+endif
+
+if ($_SESSION['user'] preenchida?) then (sim)
+  if (Usuário pertence ao grupo 'admin'?) then (não)
+    if (Rota possui restrição de 'groups'?) then (sim)
+      if (Usuário pertence a algum grupo permitido?) then (não)
+        :Retorna 403 (Forbidden Group);
+        stop
+      endif
+    endif
+    if (Rota possui restrição de 'permissions'?) then (sim)
+      if (Usuário possui alguma das permissões?) then (não)
+        :Retorna 403 (Forbidden Permission);
+        stop
+      endif
+    endif
+  endif
+endif
+
+if (Tipo de Destino?) then (path)
+  :require no arquivo PHP (View ou Script);
+elseif (controller) then
+  :Instancia Controller e executa Action;
+elseif (query) then
+  :Executa PDO prepare + bind de parâmetros da Request;
+  :Emite JsonResponse com o resultado;
+elseif (dbquery) then
+  :Instancia DBQuery e executa select();
+  :Emite JsonResponse com o resultado;
+endif
+
+stop
+
+@enduml

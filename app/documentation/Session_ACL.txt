@@ -1,0 +1,40 @@
+================================================================================
+                    CONTROLE DE ACESSO (ACL) E SESSÃO
+================================================================================
+
+1. ESTRUTURA DA SESSÃO
+Para garantir alto desempenho e evitar queries repetitivas ao banco de dados em
+cada requisição, o ZTFramework armazena toda a árvore de identidade e privilégios
+diretamente na memória de sessão do PHP:
+
+$_SESSION['user'] = [
+    'idUsuario'  => 1,
+    'nome'       => 'Administrador',
+    'email'      => 'admin@empresa.com',
+    'grupos'     => ['admin', 'diretoria'],
+    'permissoes' => [
+        'usuarios.create',
+        'usuarios.read',
+        'usuarios.update',
+        'usuarios.delete',
+        'financeiro.relatorios'
+    ]
+];
+
+2. REGRAS DE AVALIAÇÃO PELO ROUTER
+Ao avaliar uma rota no `routes.json`:
+1. `session.required`:
+   Se true, exige que `$_SESSION['user']` exista e seja um array. Caso contrário: HTTP 401.
+2. `session.keys`:
+   Lista de campos obrigatórios dentro de `$_SESSION['user']` (padrão: `['idUsuario']`).
+3. `SuperAdmin Bypass`:
+   Se `grupos` contiver o grupo especial `'admin'`, o acesso é concedido imediatamente
+   a todas as rotas protegidas (superusuário).
+4. `groups`:
+   Lista de grupos autorizados (ex: `['financeiro', 'gerente']`). O usuário precisa
+   pertencer a pelo menos um deles. Se não pertencer: HTTP 403.
+5. `permissions`:
+   Lista de permissões específicas requeridas (ex: `['usuarios.delete']`). Se o usuário
+   não possuir a permissão: HTTP 403.
+6. `users`:
+   Lista de IDs específicos de usuários com permissão direta para a rota.

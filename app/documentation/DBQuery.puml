@@ -1,0 +1,38 @@
+@startuml DBQuery
+title ZTFramework 2.0 - Diagrama de Classes da Camada de Banco de Dados
+
+package "app\\core\\database" {
+    class DBConnection {
+        - {static} array $instances
+        + {static} getConnection(?string $connectionName = null): PDO
+        + {static} setConnection(string $name, PDO $pdo): void
+        + {static} closeAll(): void
+    }
+
+    class DBQuery {
+        - string $table
+        - string $fields
+        - array $conditions
+        - array $joins
+        - array $bindings
+        - string $orderBy
+        - string $limit
+        - ?PDO $db
+        + __construct(string $table, string $fields = '*', ?PDO $db = null)
+        + addCondition(string $logical, string $column, string $operator, mixed $value): DBQuery
+        + addIn(string $logical, string $column, array $values): DBQuery
+        + addJoin(string $type, string $tableOrAlias, string $key, string $operator, string $foreignTable, string $foreignKey): DBQuery
+        + orderBy(string $column, string $direction = 'ASC'): DBQuery
+        + limit(int $limit, int $offset = 0): DBQuery
+        + buildWhere(): string
+        + getSelectSql(): string
+        + getBindings(): array
+        + select(): array
+        + insert(array $data): string|int
+        + update(array $data): int
+        + delete(): int
+    }
+}
+
+DBQuery --> DBConnection : Obtém conexão padrão PDO
+@enduml

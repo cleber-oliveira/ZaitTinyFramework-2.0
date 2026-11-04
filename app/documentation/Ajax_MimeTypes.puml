@@ -1,0 +1,31 @@
+@startuml Ajax_MimeTypes
+title ZTFramework 2.0 - Decisão de Tipo de Resposta (MIMEs vs JSON vs HTML)
+
+start
+
+:Cliente faz requisição HTTP;
+
+if (URI começa com /public/?) then (sim)
+  :Lê extensão do arquivo estático;
+  :Aplica MIME Type correspondente\n(ex: text/css, application/javascript, image/png);
+  :Entrega arquivo estático com Cache-Control;
+  stop
+endif
+
+if (Rota é do tipo 'html' (.php) E NÃO é AJAX?) then (sim)
+  :Define Header Content-Type: text/html; charset=utf-8;
+  :Renderiza View PHP / Layout;
+  stop
+else (não)
+  :Define Header Content-Type: application/json; charset=utf-8;
+  :Processa requisição via Controller / Query / DBQuery;
+  :Emite resposta JSON padronizada via JsonResponse;
+  note right
+    Garante que qualquer chamada jQuery $.ajax()
+    receba SEMPRE um JSON válido, inclusive em erros
+    (400, 401, 403, 404, 500).
+  end note
+  stop
+endif
+
+@enduml

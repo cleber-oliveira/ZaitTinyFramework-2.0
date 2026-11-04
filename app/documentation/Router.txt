@@ -1,0 +1,30 @@
+================================================================================
+                    CLASSE: app\core\utils\Router
+================================================================================
+
+1. PROPÓSITO
+A classe Router é o motor de execução do ZTFramework. É responsável por:
+- Carregar as rotas declarativas do arquivo `app/etc/routes.json`.
+- Mapear a requisição atual (URI normalizada e Verbo HTTP).
+- Tratar requisições para a `publicZone` entregando arquivos com o MIME type adequado e sem riscos de Path Traversal.
+- Validar as regras de CORS por rota ou globais.
+- Efetuar o controle de acesso (ACL) em memória com base na `$_SESSION['user']`:
+  * session.required (true/false)
+  * session.keys (ex: ['idUsuario'])
+  * groups (ex: ['admin', 'gestor'])
+  * permissions (ex: ['usuarios.create'])
+  * users (ex: [1, 2])
+- Executar uma das 4 modalidades de destino:
+  * Modalidade 1: View Direta ou Script procedural via `path`
+  * Modalidade 2: Controller OO + Action via `controller` e `action`
+  * Modalidade 3: SQL declarativo via `query`
+  * Modalidade 4: DBQuery estruturada via `dbquery`
+- Emitir erros padronizados (401, 403, 404, 405, 500) em JSON ou View HTML conforme configurado em `responseType`.
+
+2. MÉTODOS PRINCIPAIS
+- __construct(?string $routesFilePath = null, ?string $basePath = null)
+- loadRoutes(): void
+- dispatch(?string $uri = null, ?string $method = null): mixed
+- checkAccessControl(array $routeConfig): array
+- addRoute(string $uri, string $method, array $config): void
+- getRoutes(): array

@@ -1,0 +1,42 @@
+================================================================================
+                    CLASSE: app\core\database\DBQuery
+================================================================================
+
+1. PROPÓSITO
+Query Builder SQL fluente e seguro contra SQL Injection, projetado para:
+- Executar SELECT, INSERT, UPDATE e DELETE com bindings automáticos de parâmetros PDO.
+- Suporte a cláusulas WHERE dinâmicas com operadores personalizados (=, >, <, LIKE, etc.).
+- Suporte a condições WHERE IN com listas de valores.
+- Junções de tabelas (INNER, LEFT, RIGHT JOIN).
+- Ordenação (ORDER BY) e paginação (LIMIT / OFFSET).
+
+2. EXEMPLOS DE USO
+
+// 1. SELECT simples
+$usuarios = (new DBQuery('usuarios', 'idUsuario, nome, email'))
+    ->addCondition('AND', 'status', '=', 1)
+    ->orderBy('nome', 'ASC')
+    ->select();
+
+// 2. SELECT com JOIN e IN
+$dados = (new DBQuery('usuarios u', 'u.nome, g.grupo'))
+    ->addJoin('INNER', 'u', 'idGrupo', '=', 'grupos', 'idGrupo')
+    ->addIn('AND', 'g.grupo', ['admin', 'gerente'])
+    ->select();
+
+// 3. INSERT seguro
+$idInserido = (new DBQuery('usuarios'))->insert([
+    'nome'  => 'Carlos Silva',
+    'email' => 'carlos@empresa.com',
+    'senha' => password_hash('123456', PASSWORD_BCRYPT)
+]);
+
+// 4. UPDATE seguro (exige WHERE obrigatório por proteção)
+$linhasAfetadas = (new DBQuery('usuarios'))
+    ->addCondition('AND', 'idUsuario', '=', 10)
+    ->update(['status' => 0]);
+
+// 5. DELETE seguro (exige WHERE obrigatório por proteção)
+$deletados = (new DBQuery('logs'))
+    ->addCondition('AND', 'dataCriacao', '<', '2025-01-01')
+    ->delete();

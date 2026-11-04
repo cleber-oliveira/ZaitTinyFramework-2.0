@@ -1,0 +1,41 @@
+@startuml UploadB64_Component
+title ZTFramework 2.0 - Ciclo de Vida do Componente .uploadB64
+
+actor "Usuário" as User
+participant "input.uploadB64" as Input
+participant "ztfBase64File.js" as JS
+participant "FileReader (Browser)" as FR
+participant "Router / FileController" as API
+database "app/storage/uploads/" as Disk
+database "MySQL (arquivosUpload)" as DB
+
+User -> Input : Seleciona arquivo (evento 'change')
+Input -> JS : Intercepta evento automaticamente
+JS -> Input : Desabilita input e exibe Spinner de progresso
+JS -> FR : readAsDataURL(file)
+FR --> JS : String Base64 gerada (data:...;base64,...)
+
+alt data-preview informado
+    JS -> User : Atualiza elemento <img> com preview imediato
+end
+
+JS -> API : POST /api/upload { arquivo_base64, nome_original, publico, grupos... }
+
+alt Usuário Deslogado
+    API --> JS : HTTP 401 Unauthorized
+    JS -> User : Exibe alerta "Autenticação necessária" e abre modal de login
+    JS -> Input : Dispara evento jQuery 'upload:error'
+else Usuário Logado
+    API -> Disk : Salva arquivo Base64 no disco
+    API -> DB : Registra metadados e regras de ACL (idDono)
+    API --> JS : HTTP 200 JSON { status: true, data: { hash, nomeOriginal, url } }
+    
+    alt data-target informado
+        JS -> Input : Preenche input hidden com o hash/url
+    end
+    
+    JS -> User : Remove spinner e exibe badge de sucesso com link
+    JS -> Input : Reabilita input e dispara evento 'upload:success'
+end
+
+@enduml

@@ -1,0 +1,36 @@
+================================================================================
+               COMPONENTE FRONTEND: .uploadB64 (CONVERSÃO E UPLOAD)
+================================================================================
+
+1. PROPÓSITO
+Automatiza a conversão de arquivos para Base64 no próprio navegador do usuário
+e dispara o upload via AJAX diretamente para o backend do ZTFramework, sem
+necessidade de escrever código JavaScript adicional em cada formulário.
+
+2. ARQUIVO
+public/assets/js/ztfBase64File.js
+
+3. COMO UTILIZAR NO HTML
+Basta adicionar a classe `uploadB64` a qualquer input de arquivo:
+
+<input type="file" 
+       class="uploadB64 form-control" 
+       data-target="#hiddenHash" 
+       data-preview="#imgPreview" 
+       data-publico="0"
+       data-grupos='["admin","gerente"]'>
+
+<input type="hidden" id="hiddenHash" name="documento_hash">
+<img id="previewImg" style="display:none; max-width: 150px;">
+
+4. PARÂMETROS SUPORTADOS (DATA ATTRIBUTES)
+- `data-target`: Seletor do input hidden que receberá o Hash ou URL do arquivo retornado pelo backend.
+- `data-preview`: Seletor de um elemento <img> que exibirá o preview imediato da imagem.
+- `data-publico`: 0 para privado (padrão) ou 1 para público.
+- `data-grupos`: Array JSON de grupos que terão permissão de acesso ao arquivo (ex: '["admin","gerente"]').
+- `data-endpoint`: Endpoint de envio (padrão: 'api/upload').
+
+5. EVENTOS JQUERY DISPARADOS
+- `upload:success`: Disparado no input quando o upload é concluído com sucesso.
+  $(document).on('upload:success', 'input.uploadB64', function(e, data) { ... });
+- `upload:error`: Disparado quando ocorre erro ou sessão expirada (401).

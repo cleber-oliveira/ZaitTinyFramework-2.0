@@ -1,0 +1,57 @@
+@startuml Architecture
+title ZTFramework 2.0 - Arquitetura Geral
+
+skinparam componentStyle uml2
+skinparam roundcorner 10
+
+actor "Cliente (Browser / App)" as Client
+
+package "Infraestrutura Web" {
+    component ".htaccess" as Htaccess
+    component "index.php\n(Front Controller)" as Index
+    component "autoload.php\n(PSR-4)" as Autoload
+}
+
+package "Core do Framework" {
+    component "Router" as Router
+    component "Config" as Config
+    component "JsonResponse" as JsonResp
+    component "DBConnection" as DBConn
+    component "DBQuery" as DBQuery
+}
+
+package "Aplicação" {
+    folder "app/etc" {
+        file "config.json" as ConfigJson
+        file "routes.json" as RoutesJson
+    }
+    folder "app/controllers" as Controllers
+    folder "app/views" as Views
+    folder "app/models" as Models
+    folder "public" as PublicZone
+}
+
+database "MySQL / PostgreSQL" as Database
+
+Client --> Htaccess : Requisição HTTP
+Htaccess --> Index : Rewrite all
+Index --> Autoload : Carrega Classes
+Index --> Router : dispatch()
+
+Router --> Config : Lê configurações
+Config --> ConfigJson : Carrega dados
+Router --> RoutesJson : Lê rotas e permissões
+
+Router --> PublicZone : Entrega estáticos (/public/...)
+Router --> Views : Renderiza HTML (Modalidade 1)
+Router --> Controllers : Executa script / método (Modalidade 2)
+Controllers --> Models : Regras de negócio
+Models --> DBConn : Consulta dados
+
+Router --> DBConn : SQL declarativo (Modalidade 3)
+Router --> DBQuery : Query declarativa (Modalidade 4)
+
+DBConn --> Database : PDO Prepared Statements
+Router --> JsonResp : Emite JSON formatado
+
+@enduml

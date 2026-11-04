@@ -1,0 +1,41 @@
+================================================================================
+                    ZTFramework 2.0 - ARQUITETURA GERAL
+================================================================================
+
+1. VISÃO GERAL
+O ZTFramework é um framework PHP moderno, leve e seguro projetado com base em:
+- Front Controller único (index.php) acionado via módulo de reescrita (.htaccess).
+- Autoloader PSR-4 nativo (autoload.php), eliminando dependências externas obrigatórias.
+- Roteamento declarativo em JSON (app/etc/routes.json) com suporte a verbos HTTP (GET, POST, PUT, DELETE, OPTIONS).
+- Controle de acesso granular em memória (ACL) sem consultas repetitivas ao banco a cada requisição.
+- 4 modalidades de despacho: View Direta, Script/Controller, Query SQL declarativa e DBQuery estruturada.
+- Entrega segura de arquivos estáticos (publicZone) com verificação de MIME types e proteção contra Path Traversal.
+
+2. ESTRUTURA DE DIRETÓRIOS
+ZTFramework/
+├── app/
+│   ├── controllers/      # Scripts de ação e controllers da aplicação
+│   ├── models/           # Camada de domínio e negócio (ex: Usuario.php)
+│   ├── views/            # Templates HTML e páginas de erro
+│   │   └── errors/       # Views de erro (401, 403, 404, 500)
+│   ├── etc/              # Arquivos declarativos (config.json, routes.json)
+│   ├── core/
+│   │   ├── database/     # DBConnection (PDO Singleton) e DBQuery (Query Builder)
+│   │   └── utils/        # Router, Config, JsonResponse, Sanitize, Base64Files
+│   ├── storage/          # Armazenamento privado (logs, sessões, uploads base64)
+│   └── documentation/    # Documentação técnica e diagramas PlantUML (.puml)
+├── public/               # Pasta pública (assets/css, js, imagens, etc.)
+├── tests/                # Testes unitários e de integração executáveis via CLI
+├── .htaccess             # Redirecionamento total para index.php
+├── autoload.php          # Carregamento automático de classes PSR-4
+└── index.php             # Front Controller da aplicação
+
+3. FLUXO DE PROCESSAMENTO
+Cliente HTTP -> Apache (.htaccess) -> index.php -> autoload.php
+  -> Router::dispatch()
+     -> Verificação da publicZone (arquivos estáticos em /public/)
+     -> Busca no routes.json pelo par [URI, Método HTTP]
+     -> Validação de CORS
+     -> Validação de Sessão e ACL (grupos e permissões em $_SESSION['user'])
+     -> Despacho para o destino configurado (View / Controller / SQL / DBQuery)
+     -> Resposta enviada com headers e status code corretos

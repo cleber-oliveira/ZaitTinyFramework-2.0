@@ -1,0 +1,22 @@
+================================================================================
+                    RECUPERAÇÃO DE SENHA E SERVIÇO DE E-MAIL (PHPMailer)
+================================================================================
+
+1. FLUXO DE RECUPERAÇÃO DE SENHA
+1. O usuário acessa a aba "Recuperar Senha" na página inicial (`home.php`) e envia seu e-mail.
+2. A requisição atinge a rota `POST /recuperar-senha` mapeada para `app/controllers/recuperarSenha.php`.
+3. O controller aciona a classe `CodeGenerator::generatePassword(10)` para gerar uma nova senha forte e aleatória.
+4. O hash seguro é gerado com `PasswordSecurity::hash($novaSenha)` e salvo na base de dados.
+5. O serviço `Mail::quickSend(...)` despacha um e-mail HTML profissional formatado com os dados e instruções.
+6. Em ambiente de desenvolvimento (`simulate_in_dev = true`), o framework registra o e-mail completo em `app/storage/logs/mail.log` para permitir testes ágeis sem exigir servidor SMTP em produção.
+
+2. CLASSE app\core\utils\Mail
+- Instancia e gerencia a biblioteca PHPMailer.
+- Lê as credenciais de SMTP diretamente de `app/etc/config.json` (host, port, auth, user, password, from_name).
+- Suporta envio em HTML, texto plano e anexos.
+- Método estático facilitador: `Mail::quickSend($to, $subject, $htmlBody)`.
+
+3. CLASSE app\core\utils\CodeGenerator
+- `generatePassword(int $length = 10)`: Senhas seguras misturando maiúsculas, minúsculas, números e símbolos sem caracteres ambíguos.
+- `generateNumericCode(int $digits = 6)`: Códigos OTP de 6 dígitos para validações 2FA ou SMS.
+- `generateSecureToken(int $bytes = 32)`: Tokens hexadecimais seguros via CSPRNG.

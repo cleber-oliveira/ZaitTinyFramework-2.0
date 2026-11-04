@@ -1,0 +1,34 @@
+================================================================================
+                    REQUISIÇÕES AJAX (JQUERY) & GESTÃO DE MIMETYPES
+================================================================================
+
+1. PRINCÍPIO ARQUITETURAL
+O ZTFramework segue uma regra estrita de separação de tipos de resposta:
+- Arquivos da publicZone (/public/...) -> Respeitam rigorosamente seus MIME types
+  originais (CSS: text/css, JS: application/javascript, Imagens, Fontes, etc.).
+- Arquivos .php / Views (responseType: 'html') -> Respondem com Content-Type text/html.
+- TODAS as demais requisições (operações via AJAX, submissões com jQuery, APIs,
+  queries declarativas) -> Respondem OBRIGATORIAMENTE em formato JSON UTF-8
+  (Content-Type: application/json; charset=utf-8).
+
+2. COMPORTAMENTO INTELIGENTE DE ERROS EM AJAX
+Se uma requisição for realizada via AJAX (detectada automaticamente pelo cabeçalho
+HTTP_X_REQUESTED_WITH = 'xmlhttprequest' do jQuery ou Accept: application/json):
+O Router NUNCA renderizará telas HTML de erro (como 401.php ou 404.php), mas sim
+um objeto JSON estruturado:
+{
+    "status": false,
+    "code": 401,
+    "error": "ERR_UNAUTHORIZED",
+    "message": "Autenticação necessária para acessar este recurso."
+}
+Isso impede o erro comum de parse no jQuery ("Unexpected token < in JSON at position 0")
+quando um endpoint restrito é acessado.
+
+3. BIBLIOTECA FRONTEND: public/assets/js/zait.ajax.js
+Fornece um cliente jQuery AJAX unificado (ZTF.ajax) com Promises nativas:
+- ZTF.ajax.get(url, params): Executa GET esperando resposta JSON.
+- ZTF.ajax.post(url, data): Executa POST esperando resposta JSON.
+- ZTF.ajax.postJson(url, jsonObject): Envia corpo em JSON com cabeçalho adequado.
+- ZTF.ajax.submitForm(formSelector): Submete qualquer formulário via FormData,
+  capturando respostas de sucesso e mensagens de erro de forma transparente.

@@ -1,0 +1,22 @@
+{
+    "name": "zait/ztframework",
+    "description": "ZTFramework 2.0 - Framework PHP moderno com roteamento declarativo, controllers e segurança avançada.",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "phpmailer/phpmailer": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": false
+    }
+}

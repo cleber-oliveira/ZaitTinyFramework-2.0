@@ -1,0 +1,179 @@
+{
+  "/": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/home.php",
+      "session": { "required": false }
+    }
+  },
+
+  "/login": {
+    "get": {
+      "responseType": "html",
+      "path": "app/controllers/login.php",
+      "session": { "required": false }
+    },
+    "post": {
+      "responseType": "json",
+      "path": "app/controllers/loginAuth.php",
+      "session": { "required": false }
+    }
+  },
+
+  "/cadastro": {
+    "post": {
+      "responseType": "json",
+      "path": "app/controllers/registerAuth.php",
+      "session": { "required": false }
+    }
+  },
+
+  "/recuperar-senha": {
+    "post": {
+      "responseType": "json",
+      "path": "app/controllers/recuperarSenha.php",
+      "session": { "required": false }
+    }
+  },
+
+  "/logout": {
+    "get": {
+      "responseType": "html",
+      "path": "app/controllers/logout.php",
+      "session": { "required": false }
+    }
+  },
+
+  "/dashboard": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/admin": {
+    "get": {
+      "responseType": "html",
+      "controller": "AdminController",
+      "action": "index",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  },
+
+  "/api/perfil/atualizar": {
+    "post": {
+      "responseType": "json",
+      "controller": "PerfilController",
+      "action": "atualizar",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/api/upload": {
+    "post": {
+      "responseType": "json",
+      "controller": "FileController",
+      "action": "upload",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/arquivo/{hash}": {
+    "get": {
+      "responseType": "file",
+      "controller": "FileController",
+      "action": "download"
+    }
+  },
+
+  "/api/arquivos/listar": {
+    "get": {
+      "responseType": "json",
+      "controller": "FileController",
+      "action": "listar",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/api/admin/usuarios": {
+    "get": {
+      "responseType": "json",
+      "controller": "AdminController",
+      "action": "listarUsuarios",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  },
+
+  "/api/admin/usuario/grupos": {
+    "post": {
+      "responseType": "json",
+      "controller": "AdminController",
+      "action": "salvarGruposUsuario",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  },
+
+  "/api/admin/usuario/status": {
+    "post": {
+      "responseType": "json",
+      "controller": "AdminController",
+      "action": "alternarStatus",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  },
+
+  "/api/admin/grupos": {
+    "get": {
+      "responseType": "json",
+      "controller": "AdminController",
+      "action": "gruposEPermissoes",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  },
+
+  "/api/admin/grupo/permissoes": {
+    "post": {
+      "responseType": "json",
+      "controller": "AdminController",
+      "action": "salvarPermissoesGrupo",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"]
+    }
+  }
+}
