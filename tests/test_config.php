@@ -19,7 +19,7 @@ echo "=== Testando Config.php ===\n";
 Config::reset();
 
 // Teste 1: Leitura de chave simples
-assertEqual(Config::get('app.name'), 'ZTFramework', 'Config::get(app.name)');
+assertEqual(Config::get('app.name'), 'Zait Tiny Framework', 'Config::get(app.name)');
 
 // Teste 2: Leitura aninhada
 assertEqual(Config::get('database.connections.mysql.port'), 3306, 'Config::get(database.connections.mysql.port)');

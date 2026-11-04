@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "ZTFramework",
+    "name": "Zait Tiny Framework",
+    "short_name": "ZTFramework",
     "version": "2.0.0",
     "env": "development",
     "debug": true,
@@ -29,6 +30,7 @@
     "prefix": "/public",
     "cacheSeconds": 86400,
     "allowedMimes": {
+      "html": "text/html; charset=utf-8",
       "css": "text/css; charset=utf-8",
       "js": "application/javascript; charset=utf-8",
       "json": "application/json; charset=utf-8",
@@ -66,18 +68,48 @@
         "user": "postgres",
         "password": "",
         "charset": "utf8"
+      },
+      "oracle": {
+        "driver": "oci",
+        "host": "localhost",
+        "port": 1521,
+        "dbname": "XEPDB1",
+        "user": "system",
+        "password": "senha_oracle",
+        "charset": "AL32UTF8"
+      },
+      "db2": {
+        "driver": "ibm",
+        "host": "localhost",
+        "port": 50000,
+        "dbname": "SAMPLE",
+        "user": "db2inst1",
+        "password": "senha_db2",
+        "charset": "UTF-8"
       }
     }
   },
   "mail": {
     "enabled": true,
     "simulate_in_dev": true,
-    "host": "smtp.gmail.com",
-    "port": 587,
+    "provider": "mailtrap",
+    "host": "sandbox.smtp.mailtrap.io",
+    "port": 2525,
     "auth": true,
     "user": "contato@ztframework.local",
     "password": "",
-    "from_name": "ZTFramework Suporte"
+    "encryption": "tls",
+    "from_name": "Zait Tiny Framework 2.0"
+  },
+  "sms": {
+    "enabled": true,
+    "simulate_in_dev": true,
+    "provider": "twilio",
+    "twilio": {
+      "account_sid": "AC_TWILIO_EXEMPLO_ACCOUNT_SID",
+      "auth_token": "TWILIO_EXEMPLO_AUTH_TOKEN",
+      "from_number": "+1234567890"
+    }
   },
   "cors": {
     "default_enable": false,

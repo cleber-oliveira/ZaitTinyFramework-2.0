@@ -51,12 +51,29 @@ class DBConnection {
         $password = (string)($config['password'] ?? '');
         $charset  = $config['charset'] ?? ($driver === 'pgsql' ? 'utf8' : 'utf8mb4');
 
-        if ($driver === 'mysql') {
-            $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset={$charset}";
-        } elseif ($driver === 'pgsql') {
-            $dsn = "pgsql:host={$host};port={$port};dbname={$dbname};options='--client_encoding={$charset}'";
-        } else {
-            throw new RuntimeException("Driver de banco '{$driver}' não suportado.");
+        switch ($driver) {
+            case 'mysql':
+                $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset={$charset}";
+                break;
+            case 'pgsql':
+            case 'postgresql':
+                $dsn = "pgsql:host={$host};port={$port};dbname={$dbname};options='--client_encoding={$charset}'";
+                break;
+            case 'oci':
+            case 'oracle':
+                // Suporte a Oracle Easy Connect: //host:port/service_name
+                $dsn = "oci:dbname=//{$host}:{$port}/{$dbname};charset={$charset}";
+                break;
+            case 'ibm':
+            case 'db2':
+                // Suporte a IBM DB2 via driver nativo ibm ou ODBC
+                $dsn = "ibm:DRIVER={IBM DB2 ODBC DRIVER};DATABASE={$dbname};HOSTNAME={$host};PORT={$port};PROTOCOL=TCPIP;UID={$user};PWD={$password};";
+                break;
+            case 'sqlite':
+                $dsn = "sqlite:{$dbname}";
+                break;
+            default:
+                throw new RuntimeException("Driver de banco de dados '{$driver}' não suportado.");
         }
 
         $options = [

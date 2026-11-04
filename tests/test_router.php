@@ -22,7 +22,7 @@ $router = new Router();
 ob_start();
 $resHome = $router->dispatch('/', 'GET');
 $outHome = ob_get_clean();
-assertCondition(str_contains($outHome, 'ZTFramework 2.0'), 'GET / (Home pública renderiza View)');
+assertCondition(str_contains($outHome, 'Zait Tiny Framework') || str_contains($outHome, 'ZTFramework'), 'GET / (Home pública renderiza View)');
 
 // Teste 2: Rota inexistente (404)
 ob_start();

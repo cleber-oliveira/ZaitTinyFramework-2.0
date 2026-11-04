@@ -7,7 +7,7 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZTFramework 2.0 - Alta Performance & Segurança</title>
+    <title>Zait Tiny Framework 2.0 - Alta Performance & Segurança</title>
     <base href="<?= htmlspecialchars($baseHref, ENT_QUOTES, 'UTF-8') ?>">
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="public/assets/css/bootstrap.min.css">
@@ -44,7 +44,7 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3">
     <div class="container">
         <a class="navbar-brand fw-bold text-primary" href="./">
-            🚀 ZTFramework <span class="badge bg-primary text-white fs-6">2.0</span>
+            🚀 Zait Tiny Framework <span class="badge bg-primary text-white fs-6">2.0</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
             <span class="navbar-toggler-icon"></span>
@@ -54,8 +54,16 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
                 <li class="nav-item"><a class="nav-link active" href="#recursos">Recursos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#seguranca">Segurança Tripla</a></li>
                 <li class="nav-item"><a class="nav-link" href="#base64">Uploads Base64</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-warning fw-bold" href="public/manual.html" target="_blank">
+                        📘 Manual de Uso (HTML)
+                    </a>
+                </li>
             </ul>
-            <div class="d-flex">
+            <div class="d-flex gap-2">
+                <a href="public/manual.html" target="_blank" class="btn btn-outline-warning px-3 fw-semibold shadow-sm d-none d-md-inline-block">
+                    📘 Manual Didático
+                </a>
                 <button type="button" class="btn btn-primary px-4 fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#authModal">
                     Minha Conta / Acessar
                 </button>
@@ -69,15 +77,18 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-9">
-                <h1 class="display-4 fw-bold mb-3">Segurança, Performance e Roteamento Declarativo</h1>
+                <span class="badge bg-light text-primary px-3 py-2 fw-bold text-uppercase mb-3 shadow-sm">Alta Performance &bull; Segurança Nativa &bull; Multi-SGBD</span>
+                <h1 class="display-4 fw-bold mb-3">Zait Tiny Framework 2.0</h1>
                 <p class="lead mb-4 opacity-90">
-                    Construído com PHP 8.2+, controle granular de acesso (ACL em memória), proteção criptográfica com <strong>BCrypt + Salt + Pepper</strong> e armazenamento de arquivos em <strong>Base64</strong>.
+                    Construído com PHP 8.2+, controle granular de acesso (ACL), proteção criptográfica com <strong>BCrypt + Salt + Pepper</strong>, uploads em <strong>Base64</strong> e suporte a <strong>MySQL, PostgreSQL, Oracle e DB2</strong>.
                 </p>
-                <div class="d-flex justify-content-center gap-3">
+                <div class="d-flex justify-content-center flex-wrap gap-3">
                     <button class="btn btn-light btn-lg px-4 fw-bold text-primary shadow" data-bs-toggle="modal" data-bs-target="#authModal">
-                        Começar Agora
+                        Começar Agora / Login
                     </button>
-                    <a href="#recursos" class="btn btn-outline-light btn-lg px-4">Saiba Mais</a>
+                    <a href="public/manual.html" target="_blank" class="btn btn-warning btn-lg px-4 fw-bold shadow">
+                        📘 Manual de Uso (HTML)
+                    </a>
                 </div>
             </div>
         </div>
@@ -89,7 +100,7 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
     <div class="container py-4">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Projetado para Produtividade e Escalabilidade</h2>
-            <p class="text-muted">Conheça os diferenciais técnicos do ZTFramework</p>
+            <p class="text-muted">Conheça os diferenciais técnicos do Zait Tiny Framework 2.0</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
@@ -113,6 +124,27 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
                     <p class="text-muted">Verificação de permissões em memória sem consultas redundantes ao banco de dados durante as requisições.</p>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="fs-1 text-primary mb-3">🗄️</div>
+                    <h4 class="fw-bold">Suporte Multi-Banco</h4>
+                    <p class="text-muted">Pronto para MySQL/MariaDB, com drivers configurados para PostgreSQL, Oracle (OCI) e IBM DB2 via PDO unificado.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="fs-1 text-primary mb-3">📬</div>
+                    <h4 class="fw-bold">E-mails (Mailtrap e outros)</h4>
+                    <p class="text-muted">Compatível com qualquer SMTP. Sugestão prática com Mailtrap para testes em sandbox, além de SendGrid, SES, Gmail ou simulação local em logs.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="fs-1 text-primary mb-3">📲</div>
+                    <h4 class="fw-bold">SMS e OTP (Twilio e outros)</h4>
+                    <p class="text-muted">Arquitetura aberta para mensageria. Sugestão com Twilio para envio de SMS e tokens 2FA/OTP, adaptável a Z-API, WhatsApp ou AWS SNS.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -120,7 +152,8 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 <!-- Footer -->
 <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-        <small class="opacity-75">&copy; 2026 ZTFramework Development Team &bull; Desenvolvido para máxima segurança e flexibilidade.</small>
+        <p class="mb-1 fw-bold">Zait Tiny Framework 2.0 (ZTFramework)</p>
+        <small class="opacity-75">Desenvolvido pelos Professores Drº Cleber S. Oliveira e Drª Marcia Aparecida Silva Bissaco &bull; PHP 8.2+</small>
     </div>
 </footer>
 

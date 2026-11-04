@@ -7,6 +7,14 @@
     }
   },
 
+  "/manual": {
+    "get": {
+      "responseType": "html",
+      "path": "public/manual.html",
+      "session": { "required": false }
+    }
+  },
+
   "/login": {
     "get": {
       "responseType": "html",
@@ -48,6 +56,30 @@
     "get": {
       "responseType": "html",
       "path": "app/views/main.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/chamados": {
+    "get": {
+      "responseType": "html",
+      "controller": "ChamadoController",
+      "action": "index",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  },
+
+  "/api/chamados/novo": {
+    "post": {
+      "responseType": "json",
+      "controller": "ChamadoController",
+      "action": "criar",
       "session": {
         "required": true,
         "keys": ["idUsuario"]
