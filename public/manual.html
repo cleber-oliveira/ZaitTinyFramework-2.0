@@ -133,10 +133,11 @@
                 <a href="#dbquery">7. Fluent DBQuery</a>
                 <a href="#seguranca">8. Criptografia & Pepper</a>
                 <a href="#uploads">9. Uploads Base64 & ACL</a>
-                <a href="#mailtrap">10. E-mails com Mailtrap</a>
-                <a href="#twilio">11. SMS com Twilio</a>
-                <a href="#tutorial">12. Tutorial Prático</a>
-                <a href="#testes">13. Testes Automatizados</a>
+                <a href="#paineis-perfis">10. Dashboards & Credenciais</a>
+                <a href="#mailtrap">11. E-mails (Mailtrap e outros)</a>
+                <a href="#twilio">12. SMS & OTP (Twilio e outros)</a>
+                <a href="#tutorial">13. Tutorial Prático</a>
+                <a href="#testes">14. Testes Automatizados</a>
             </nav>
         </aside>
 
@@ -501,9 +502,80 @@ if (PasswordSecurity::verify($senhaDigitada, $hashSalvo)) {
                 </ul>
             </section>
 
-            <!-- 10. Mailtrap -->
+            <!-- 10. Dashboards por Perfil & Credenciais Padrão -->
+            <section id="paineis-perfis" class="content-card">
+                <h2 class="section-title">10. Dashboards por Perfil & Credenciais Padrão</h2>
+                <p>O ZTFramework 2.0 fornece telas de painel principal (<code>main</code>) desacopladas e personalizadas para as necessidades de cada perfil de acesso:</p>
+
+                <div class="table-responsive my-3">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nível / Perfil</th>
+                                <th>Arquivo de View</th>
+                                <th>Usuário Padrão</th>
+                                <th>Senha Padrão</th>
+                                <th>Propósito e Capacidades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-danger">admin</span></td>
+                                <td><code>main_admin.php</code></td>
+                                <td><code>admin@ztframework.local</code></td>
+                                <td><code>admin123</code></td>
+                                <td>Governança total: usuários, permissões, métricas e seletor para simular outras visões.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-primary">gerente</span></td>
+                                <td><code>main_gerente.php</code></td>
+                                <td><code>gerente@ztframework.local</code></td>
+                                <td><code>gerente123</code></td>
+                                <td>Gestão operacional da equipe, acompanhamento de tickets pendentes e relatórios.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-success">financeiro</span></td>
+                                <td><code>main_financeiro.php</code></td>
+                                <td><code>financeiro@ztframework.local</code></td>
+                                <td><code>financeiro123</code></td>
+                                <td>Fluxo de receitas/despesas, conciliação e custódia de comprovantes em Base64.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">suporte</span></td>
+                                <td><code>main_suporte.php</code></td>
+                                <td><code>suporte@ztframework.local</code></td>
+                                <td><code>suporte123</code></td>
+                                <td>Central de atendimento Helpdesk, triagem em tempo real e controle de SLA.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-secondary">usuario</span></td>
+                                <td><code>main.php</code></td>
+                                <td><code>usuario@ztframework.local</code></td>
+                                <td><code>usuario123</code></td>
+                                <td>Perfil do usuário: edição com foto em Base64, upload de arquivos com ACL e abertura de chamados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">Despacho Automático e Alternância Rápida:</h3>
+                <p>Quando o usuário requisita a rota protegida <code>/dashboard</code>, o <code>main.php</code> atua como despachante inteligente:</p>
+                <pre class="code-block">// Despacho de acordo com o nível da sessão:
+if (in_array('admin', $grupos, true)) {
+    require __DIR__ . '/main_admin.php';
+    return;
+}
+if (in_array('suporte', $grupos, true)) {
+    require __DIR__ . '/main_suporte.php';
+    return;
+}
+// etc.</pre>
+                <p>Usuários com privilégio de administrador podem navegar diretamente para a visão de qualquer perfil passando <code>?perfil=nome_do_perfil</code> (ex: <code>dashboard?perfil=suporte</code> ou <code>dashboard?perfil=usuario</code>), permitindo testar a experiência visual de cada papel sem necessidade de logout.</p>
+            </section>
+
+            <!-- 11. Mailtrap -->
             <section id="mailtrap" class="content-card">
-                <h2 class="section-title">10. Dicas de Teste de E-mails com Mailtrap</h2>
+                <h2 class="section-title">11. Dicas de Teste de E-mails com Mailtrap (ou outros)</h2>
                 <p>O <strong>Mailtrap</strong> é um servidor SMTP seguro em nuvem para capturar e inspecionar e-mails de teste em ambiente de desenvolvimento sem correr o risco de disparar mensagens reais para clientes.</p>
 
                 <h3 class="subsection-title">Como Configurar o Mailtrap no ZTFramework:</h3>
@@ -529,10 +601,10 @@ if (PasswordSecurity::verify($senhaDigitada, $hashSalvo)) {
                 </div>
             </section>
 
-            <!-- 11. Twilio -->
+            <!-- 12. Twilio -->
             <section id="twilio" class="content-card">
-                <h2 class="section-title">11. Dicas de Envio de SMS com Twilio</h2>
-                <p>O ZTFramework inclui a classe <code>Sms</code> para disparar mensagens SMS e códigos OTP de 2 fatores (2FA) via REST API do Twilio.</p>
+                <h2 class="section-title">12. Dicas de Envio de SMS e OTP com Twilio (ou outros)</h2>
+                <p>O ZTFramework inclui a classe <code>Sms</code> para disparar mensagens SMS e códigos OTP de 2 fatores (2FA) via REST API do Twilio, facilmente adaptável a outros gateways SMS ou WhatsApp (Z-API, TotalVoice, AWS SNS).</p>
 
                 <h3 class="subsection-title">Como usar no seu Controller:</h3>
                 <pre class="code-block">use app\core\utils\Sms;
@@ -558,10 +630,10 @@ Sms::send('+5511999998888', "Seu código de acesso ZTFramework: {$codigoOtp}");<
                 <p>Em modo de desenvolvimento (<code>simulate_in_dev: true</code>), os SMS são registrados de forma didática no arquivo <code>app/storage/logs/sms.log</code>.</p>
             </section>
 
-            <!-- 12. Tutorial Tipo Apostila -->
+            <!-- 13. Tutorial Tipo Apostila -->
             <section id="tutorial" class="content-card">
                 <span class="badge bg-primary text-uppercase px-3 py-2 fw-bold mb-2">Material Didático Passo a Passo</span>
-                <h2 class="section-title">12. Apostila Prática: Criando um Módulo Completo do Zero</h2>
+                <h2 class="section-title">13. Apostila Prática: Criando um Módulo Completo do Zero</h2>
                 <p class="lead text-muted">
                     Nesta seção didática, você aprenderá como construir um módulo corporativo completo de <strong>Chamados de Suporte Técnico</strong> no Zait Tiny Framework, integrando Banco de Dados, Roteamento com Controle de Acesso (ACL), Modelagem Fluente com <code>DBQuery</code> e Interface Assíncrona com Bootstrap 5 e jQuery AJAX sem recarregar a tela.
                 </p>
@@ -881,9 +953,9 @@ $(document).ready(function() {
                 </div>
             </section>
 
-            <!-- 13. Testes -->
+            <!-- 14. Testes -->
             <section id="testes" class="content-card">
-                <h2 class="section-title">13. Suíte de Testes Automatizados</h2>
+                <h2 class="section-title">14. Suíte de Testes Automatizados</h2>
                 <p>Para garantir que qualquer alteração preserve 100% da segurança e estabilidade, o framework inclui 8 suítes integradas de testes executáveis com um único comando:</p>
                 <pre class="code-block">php tests/run_all.php</pre>
                 <div class="alert alert-success mb-0">

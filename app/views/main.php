@@ -1,6 +1,63 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * ============================================================================
+ * Zait Tiny Framework 2.0 (ZTFramework)
+ * ============================================================================
+ * 
+ * @package   ZTFramework
+ * @version   2.0.0
+ * @author    Professor Drº Cleber S. Oliveira
+ * @author    Professora Drª Marcia Aparecida Silva Bissaco
+ * @copyright (c) 2026 ZTFramework
+ * ============================================================================
+ */
+
 $user = $_SESSION['user'] ?? [];
-$isAdmin = in_array('admin', (array)($user['grupos'] ?? []), true);
+$grupos = (array)($user['grupos'] ?? []);
+$perfilReq = $_GET['perfil'] ?? null;
+
+// Roteador de Perfil: Despacha para o dashboard específico do perfil
+if ($perfilReq !== null) {
+    if ($perfilReq === 'admin' && in_array('admin', $grupos, true)) {
+        require __DIR__ . '/main_admin.php';
+        return;
+    }
+    if ($perfilReq === 'gerente' && (in_array('gerente', $grupos, true) || in_array('admin', $grupos, true))) {
+        require __DIR__ . '/main_gerente.php';
+        return;
+    }
+    if ($perfilReq === 'financeiro' && (in_array('financeiro', $grupos, true) || in_array('admin', $grupos, true))) {
+        require __DIR__ . '/main_financeiro.php';
+        return;
+    }
+    if ($perfilReq === 'suporte' && (in_array('suporte', $grupos, true) || in_array('admin', $grupos, true))) {
+        require __DIR__ . '/main_suporte.php';
+        return;
+    }
+    // Caso perfil=usuario, continua para renderizar o painel pessoal padrão (main.php)
+} else {
+    // Sem parâmetro 'perfil', abre o painel específico do perfil do usuário logado
+    if (in_array('admin', $grupos, true)) {
+        require __DIR__ . '/main_admin.php';
+        return;
+    }
+    if (in_array('gerente', $grupos, true)) {
+        require __DIR__ . '/main_gerente.php';
+        return;
+    }
+    if (in_array('financeiro', $grupos, true)) {
+        require __DIR__ . '/main_financeiro.php';
+        return;
+    }
+    if (in_array('suporte', $grupos, true)) {
+        require __DIR__ . '/main_suporte.php';
+        return;
+    }
+}
+
+$isAdmin = in_array('admin', $grupos, true);
 $fotoSrc = !empty($user['foto']) ? $user['foto'] : 'https://via.placeholder.com/150?text=Sem+Foto';
 
 $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
@@ -11,10 +68,11 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZTFramework - Painel Principal</title>
+    <title>Painel do Usuário — Zait Tiny Framework 2.0</title>
     <base href="<?= htmlspecialchars($baseHref, ENT_QUOTES, 'UTF-8') ?>">
     <link rel="stylesheet" href="public/assets/css/bootstrap.min.css">
     <style>
+        body { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
         .profile-img {
             width: 120px;
             height: 120px;
@@ -27,6 +85,7 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
             border: none;
             border-radius: 14px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            background-color: #fff;
         }
     </style>
 </head>
@@ -36,18 +95,20 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-2">
     <div class="container">
         <a class="navbar-brand fw-bold text-primary" href="dashboard">
-            🚀 ZTFramework <span class="badge bg-secondary">Painel</span>
+            👤 ZTFramework <span class="badge bg-secondary">PAINEL DO USUÁRIO</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navDashboard">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navDashboard">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="dashboard">Meu Painel</a></li>
+                <li class="nav-item"><a class="nav-link active" href="dashboard?perfil=usuario">Meu Perfil</a></li>
+                <li class="nav-item"><a class="nav-link" href="chamados">Abrir Chamado</a></li>
+                <li class="nav-item"><a class="nav-link" href="public/manual.html" target="_blank">Manual (HTML)</a></li>
                 <?php if ($isAdmin): ?>
                     <li class="nav-item">
                         <a class="nav-link text-warning fw-bold" href="admin">
-                            🛡️ Área Administrativa
+                            🛡️ Gestão Administrativa
                         </a>
                     </li>
                 <?php endif; ?>
@@ -64,6 +125,27 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
 </nav>
 
 <div class="container my-5">
+    <?php if (in_array('admin', $grupos, true)): ?>
+        <div class="alert alert-danger py-2 d-flex justify-content-between align-items-center mb-4 rounded-3 shadow-sm">
+            <span>🛡️ Você está visualizando seu <strong>Perfil Pessoal</strong> como Administrador.</span>
+            <a href="dashboard" class="btn btn-danger btn-sm fw-bold">Voltar ao Painel Admin &rarr;</a>
+        </div>
+    <?php elseif (in_array('gerente', $grupos, true)): ?>
+        <div class="alert alert-primary py-2 d-flex justify-content-between align-items-center mb-4 rounded-3 shadow-sm">
+            <span>👔 Você está visualizando seu <strong>Perfil Pessoal</strong> como Gerente.</span>
+            <a href="dashboard" class="btn btn-primary btn-sm fw-bold">Voltar ao Painel da Gerência &rarr;</a>
+        </div>
+    <?php elseif (in_array('financeiro', $grupos, true)): ?>
+        <div class="alert alert-success py-2 d-flex justify-content-between align-items-center mb-4 rounded-3 shadow-sm">
+            <span>💰 Você está visualizando seu <strong>Perfil Pessoal</strong> como Analista Financeiro.</span>
+            <a href="dashboard" class="btn btn-success btn-sm fw-bold">Voltar ao Painel Financeiro &rarr;</a>
+        </div>
+    <?php elseif (in_array('suporte', $grupos, true)): ?>
+        <div class="alert alert-info py-2 d-flex justify-content-between align-items-center mb-4 rounded-3 shadow-sm">
+            <span>🎧 Você está visualizando seu <strong>Perfil Pessoal</strong> como Suporte Técnico.</span>
+            <a href="dashboard" class="btn btn-info text-dark btn-sm fw-bold">Voltar à Central de Suporte &rarr;</a>
+        </div>
+    <?php endif; ?>
     <div class="row g-4">
         <!-- Coluna 1: Edição de Perfil e Foto Base64 -->
         <div class="col-lg-5">

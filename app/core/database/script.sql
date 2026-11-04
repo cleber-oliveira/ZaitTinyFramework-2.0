@@ -130,16 +130,41 @@ INSERT IGNORE INTO `gruposPermissoes` (`idGrupo`, `idPermissao`) VALUES
 
 -- 2.4 Usuários Iniciais de Exemplo com Hashes BCrypt + Salt + Pepper
 -- Senha de todos configurada com Pepper oficial do config.json:
--- admin@ztframework.local     -> admin123
--- gerente@ztframework.local   -> gerente123
--- usuario@ztframework.local   -> usuario123
+-- admin@ztframework.local      -> admin123      (Nível: admin)
+-- gerente@ztframework.local    -> gerente123    (Nível: gerente)
+-- usuario@ztframework.local    -> usuario123    (Nível: usuario)
+-- financeiro@ztframework.local -> financeiro123 (Nível: financeiro)
+-- suporte@ztframework.local    -> suporte123    (Nível: suporte)
 INSERT IGNORE INTO `usuarios` (`idUsuario`, `nome`, `email`, `senha`, `status`, `primeiroAcesso`) VALUES
-(1, 'Administrador Master', 'admin@ztframework.local', '$2y$12$N4G2fJBMrWLpJk2qbmtKIuAn.Q.ebwgraI.Up2tmqwtZDlG2xxAAK', 1, 0),
-(2, 'Gerente de Operações', 'gerente@ztframework.local', '$2y$12$4A9K2LCHjYfaQzyJZiAlp.c1bOqB20W0dDAxX9dbk.CNJdPd3hxLC', 1, 0),
-(3, 'Usuário Padrão', 'usuario@ztframework.local', '$2y$12$ukAPxm2IbHUGJSR2nUEVDe7Er6.rg5n9kGhpBP/8EOzwPX7V0bSkK', 1, 0);
+(1, 'Administrador Master', 'admin@ztframework.local', '$2y$12$mHCg.KJrd72V1YTb2khXTODFjLX2utPXwemKozrnXDPN5fd6CecAO', 1, 0),
+(20, 'Gerente de Operações', 'gerente@ztframework.local', '$2y$12$fl3Onp5AwlrGIo/kqGFm6OXIyCB84NeQjPQ9cdvJ8cw2ybkRu.V12', 1, 0),
+(21, 'Usuário Padrão', 'usuario@ztframework.local', '$2y$12$.uDw0otVRL5/f20hEdBGIOg4QgIXDrIUDCdsP3gmCbDxOcDDU4mBK', 1, 0),
+(22, 'Analista Financeiro', 'financeiro@ztframework.local', '$2y$12$41K6E2NDJ3tcnqAiBR89SuNuTP/dhrS8.6h7PowWGVMMZWYUySvtm', 1, 0),
+(23, 'Especialista de Suporte', 'suporte@ztframework.local', '$2y$12$GAqfBYh1NWaQw8S13GaOzeXZaGvZjj7eLGhKV2m9EaedZDYiKukV6', 1, 0);
 
 -- 2.5 Associação dos Usuários Iniciais aos seus Grupos
 INSERT IGNORE INTO `usuariosGrupos` (`idUsuario`, `idGrupo`) VALUES
-(1, 1), -- Admin no grupo admin
-(2, 3), -- Gerente no grupo gerente
-(3, 2); -- Usuário no grupo usuario
+(1, 1),  -- Admin no grupo admin
+(20, 3), -- Gerente no grupo gerente
+(21, 2), -- Usuário no grupo usuario
+(22, 4), -- Financeiro no grupo financeiro
+(23, 5); -- Suporte no grupo suporte
+
+-- =============================================================================
+-- 3. MÓDULO SUPORTE / HELPDESK (CHAMADOS)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS `chamados` (
+    `idChamado` INT AUTO_INCREMENT PRIMARY KEY,
+    `idUsuario` INT NOT NULL,
+    `titulo` VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `descricao` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `status` ENUM('aberto', 'em_andamento', 'fechado') NOT NULL DEFAULT 'aberto',
+    `dataAbertura` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_chamados_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO `chamados` (`idChamado`, `idUsuario`, `titulo`, `descricao`, `status`) VALUES
+(1, 21, 'Dúvida sobre upload de arquivo PDF', 'Gostaria de saber qual o limite de tamanho para upload de comprovantes.', 'aberto'),
+(2, 22, 'Integração bancária com Gateway', 'Solicitação de liberação de porta para webhook financeiro.', 'em_andamento'),
+(3, 20, 'Configuração de novo grupo de usuários', 'Necessário liberar permissão de acesso ao módulo de relatórios para novos coordenadores.', 'fechado');

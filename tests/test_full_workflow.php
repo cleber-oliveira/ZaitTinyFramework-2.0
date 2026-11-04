@@ -109,4 +109,71 @@ assertCondition(
     'Administrador atribuiu novo nível (gerente) ao usuário com sucesso'
 );
 
+// Teste 11: Autenticação de todos os 5 perfis padrão pré-configurados no seed
+$perfisPadrao = [
+    ['email' => 'admin@ztframework.local',      'senha' => 'admin123',      'grupo' => 'admin'],
+    ['email' => 'gerente@ztframework.local',    'senha' => 'gerente123',    'grupo' => 'gerente'],
+    ['email' => 'usuario@ztframework.local',    'senha' => 'usuario123',    'grupo' => 'usuario'],
+    ['email' => 'financeiro@ztframework.local', 'senha' => 'financeiro123', 'grupo' => 'financeiro'],
+    ['email' => 'suporte@ztframework.local',    'senha' => 'suporte123',    'grupo' => 'suporte'],
+];
+
+foreach ($perfisPadrao as $p) {
+    $resAuth = $usuarioModel->autenticar($p['email'], $p['senha']);
+    assertCondition(
+        $resAuth !== null && in_array($p['grupo'], $resAuth['grupos'], true),
+        "Autenticação do usuário de teste '{$p['email']}' com nível '{$p['grupo']}'"
+    );
+}
+
+// Teste 12: Despacho dinâmico no main.php para cada perfil corporativo
+$_SESSION['user'] = $usuarioModel->autenticar('admin@ztframework.local', 'admin123');
+$_GET = [];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outAdmin = ob_get_clean();
+assertCondition(str_contains($outAdmin, 'ADMIN MASTER'), 'Despacho de admin direciona para main_admin.php');
+
+$_SESSION['user'] = $usuarioModel->autenticar('gerente@ztframework.local', 'gerente123');
+$_GET = [];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outGerente = ob_get_clean();
+assertCondition(str_contains($outGerente, 'GERÊNCIA'), 'Despacho de gerente direciona para main_gerente.php');
+
+$_SESSION['user'] = $usuarioModel->autenticar('financeiro@ztframework.local', 'financeiro123');
+$_GET = [];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outFin = ob_get_clean();
+assertCondition(str_contains($outFin, 'FINANCEIRO'), 'Despacho de financeiro direciona para main_financeiro.php');
+
+$_SESSION['user'] = $usuarioModel->autenticar('suporte@ztframework.local', 'suporte123');
+$_GET = [];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outSup = ob_get_clean();
+assertCondition(str_contains($outSup, 'SUPORTE'), 'Despacho de suporte direciona para main_suporte.php');
+
+$_SESSION['user'] = $usuarioModel->autenticar('usuario@ztframework.local', 'usuario123');
+$_GET = [];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outUser = ob_get_clean();
+assertCondition(str_contains($outUser, 'PAINEL DO USUÁRIO'), 'Despacho de usuário comum renderiza main.php');
+
+// Alternância via ?perfil= para Administradores
+$_SESSION['user'] = $usuarioModel->autenticar('admin@ztframework.local', 'admin123');
+$_GET = ['perfil' => 'suporte'];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outSimSup = ob_get_clean();
+assertCondition(str_contains($outSimSup, 'SUPORTE'), 'Admin simulando perfil suporte via ?perfil=suporte');
+
+$_GET = ['perfil' => 'usuario'];
+ob_start();
+require dirname(__DIR__) . '/app/views/main.php';
+$outSimUser = ob_get_clean();
+assertCondition(str_contains($outSimUser, 'PAINEL DO USUÁRIO'), 'Admin acessando perfil pessoal via ?perfil=usuario');
+
 echo "Todos os testes do Fluxo Completo passaram com 100% de sucesso!\n\n";

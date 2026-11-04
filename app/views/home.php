@@ -28,6 +28,30 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
         .feature-box:hover {
             transform: translateY(-4px);
         }
+        .cred-card {
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cred-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .cred-code {
+            background-color: #f1f5f9;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            color: #0f172a;
+        }
         .nav-tabs .nav-link {
             font-weight: 600;
             color: #6c757d;
@@ -54,6 +78,7 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
                 <li class="nav-item"><a class="nav-link active" href="#recursos">Recursos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#seguranca">Segurança Tripla</a></li>
                 <li class="nav-item"><a class="nav-link" href="#base64">Uploads Base64</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-semibold" href="#credenciais">Perfis de Teste</a></li>
                 <li class="nav-item">
                     <a class="nav-link text-warning fw-bold" href="public/manual.html" target="_blank">
                         📘 Manual de Uso (HTML)
@@ -143,6 +168,184 @@ $baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '
                     <div class="fs-1 text-primary mb-3">📲</div>
                     <h4 class="fw-bold">SMS e OTP (Twilio e outros)</h4>
                     <p class="text-muted">Arquitetura aberta para mensageria. Sugestão com Twilio para envio de SMS e tokens 2FA/OTP, adaptável a Z-API, WhatsApp ou AWS SNS.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seção: Instruções de Acesso e Perfis Padrões -->
+<section class="py-5 bg-white border-top shadow-sm" id="credenciais">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-secondary text-uppercase fw-bold px-3 py-2 mb-2">Ambiente de Demonstração &bull; Acesso Imediato</span>
+            <h2 class="fw-bold">Usuários Padrão e Painéis por Perfil</h2>
+            <p class="text-muted mx-auto" style="max-width: 820px;">
+                O Zait Tiny Framework 2.0 implementa <strong>dashboards dedicados para cada perfil de acesso</strong> (<a href="public/manual.html#modulo-chamados" target="_blank" class="text-decoration-none"><code>main_admin.php</code></a>, <code>main_gerente.php</code>, <code>main_financeiro.php</code>, <code>main_suporte.php</code> e <code>main.php</code>). Teste cada perfil clicando em <strong>Testar Acesso</strong> para preencher automaticamente as credenciais no modal de login:
+            </p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-3 mb-4">
+            <!-- 1. Administrador -->
+            <div class="col">
+                <div class="cred-card border-top border-danger border-4">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-danger">admin</span>
+                            <span class="text-muted small">Nível 1</span>
+                        </div>
+                        <h6 class="fw-bold mb-1">Administrador</h6>
+                        <p class="small text-muted mb-3">Painel: <code>main_admin.php</code></p>
+                        
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">E-mail:</span>
+                            <span class="cred-code text-break">admin@ztframework.local</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Senha:</span>
+                            <span class="cred-code">admin123</span>
+                        </div>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            Controle total: segurança, governança de usuários, grupos, auditoria e simulação de visões.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 fw-semibold btn-fill-login mt-3" 
+                            data-email="admin@ztframework.local" data-senha="admin123">
+                        ⚡ Testar Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. Gerente -->
+            <div class="col">
+                <div class="cred-card border-top border-primary border-4">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary">gerente</span>
+                            <span class="text-muted small">Nível 2</span>
+                        </div>
+                        <h6 class="fw-bold mb-1">Gerência</h6>
+                        <p class="small text-muted mb-3">Painel: <code>main_gerente.php</code></p>
+                        
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">E-mail:</span>
+                            <span class="cred-code text-break">gerente@ztframework.local</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Senha:</span>
+                            <span class="cred-code">gerente123</span>
+                        </div>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            Supervisão de equipes operacionais, visão geral de tickets pendentes e relatórios.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-semibold btn-fill-login mt-3" 
+                            data-email="gerente@ztframework.local" data-senha="gerente123">
+                        ⚡ Testar Gerente
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Financeiro -->
+            <div class="col">
+                <div class="cred-card border-top border-success border-4">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-success">financeiro</span>
+                            <span class="text-muted small">Nível 3</span>
+                        </div>
+                        <h6 class="fw-bold mb-1">Financeiro</h6>
+                        <p class="small text-muted mb-3">Painel: <code>main_financeiro.php</code></p>
+                        
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">E-mail:</span>
+                            <span class="cred-code text-break">financeiro@ztframework.local</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Senha:</span>
+                            <span class="cred-code">financeiro123</span>
+                        </div>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            Controle de faturamento, conciliação de receitas/despesas e anexos de comprovantes.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm w-100 fw-semibold btn-fill-login mt-3" 
+                            data-email="financeiro@ztframework.local" data-senha="financeiro123">
+                        ⚡ Testar Financeiro
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. Suporte -->
+            <div class="col">
+                <div class="cred-card border-top border-info border-4">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark">suporte</span>
+                            <span class="text-muted small">Nível 4</span>
+                        </div>
+                        <h6 class="fw-bold mb-1">Suporte Técnico</h6>
+                        <p class="small text-muted mb-3">Painel: <code>main_suporte.php</code></p>
+                        
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">E-mail:</span>
+                            <span class="cred-code text-break">suporte@ztframework.local</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Senha:</span>
+                            <span class="cred-code">suporte123</span>
+                        </div>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            Central Helpdesk: fila de atendimento, triagem rápida de tickets e controle de SLA.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-info text-dark btn-sm w-100 fw-semibold btn-fill-login mt-3" 
+                            data-email="suporte@ztframework.local" data-senha="suporte123">
+                        ⚡ Testar Suporte
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5. Usuário -->
+            <div class="col">
+                <div class="cred-card border-top border-secondary border-4">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-secondary">usuario</span>
+                            <span class="text-muted small">Nível 5</span>
+                        </div>
+                        <h6 class="fw-bold mb-1">Usuário Comum</h6>
+                        <p class="small text-muted mb-3">Painel: <code>main.php</code></p>
+                        
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">E-mail:</span>
+                            <span class="cred-code text-break">usuario@ztframework.local</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-muted small d-block">Senha:</span>
+                            <span class="cred-code">usuario123</span>
+                        </div>
+                        <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                            Perfil individual com foto em Base64, upload de arquivos privados e abertura de chamados.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold btn-fill-login mt-3" 
+                            data-email="usuario@ztframework.local" data-senha="usuario123">
+                        ⚡ Testar Usuário
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dica de Arquitetura dos Painéis -->
+        <div class="card border-0 bg-light p-4 rounded-4 shadow-sm">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="fs-2 text-primary">💡</div>
+                <div class="flex-grow-1">
+                    <h6 class="fw-bold mb-1">Como funciona o Despacho Dinâmico dos Painéis?</h6>
+                    <p class="text-muted small mb-0">
+                        Ao autenticar e navegar para a rota protegida <code>/dashboard</code>, o Zait Tiny Framework analisa os grupos associados à sessão e renderiza dinamicamente a view adequada: <code>main_admin.php</code> (para administradores), <code>main_gerente.php</code> (gerência), <code>main_financeiro.php</code> (financeiro), <code>main_suporte.php</code> (suporte) ou <code>main.php</code> (usuários comuns). Usuários com permissão administrativa ainda possuem à disposição a alternância rápida via query string <code>?perfil=...</code> sem necessidade de deslogar.
+                    </p>
                 </div>
             </div>
         </div>
@@ -341,6 +544,24 @@ $(document).ready(function() {
             .finally(function() {
                 $btn.prop('disabled', false).text('Enviar Nova Senha');
             });
+    });
+
+    // 4. Preenchimento Automático dos Perfis de Teste no Modal de Login
+    $('.btn-fill-login').on('click', function() {
+        const email = $(this).data('email');
+        const senha = $(this).data('senha');
+
+        // Abre o modal de autenticação
+        const authModal = bootstrap.Modal.getOrCreateInstance('#authModal');
+        authModal.show();
+
+        // Seleciona a aba 'Entrar'
+        bootstrap.Tab.getOrCreateInstance('#tab-login-btn').show();
+
+        // Preenche os campos
+        $('#login-email').val(email);
+        $('#login-senha').val(senha);
+        hideAlert();
     });
 
 });
