@@ -38,7 +38,16 @@ class Config {
             return self::$data;
         }
 
-        $path = self::$configPath ?? dirname(__DIR__, 2) . '/etc/config.json';
+        $defaultPath = dirname(__DIR__, 2) . '/etc/config.json';
+        $examplePath = dirname(__DIR__, 2) . '/etc/config.json.example';
+        $path = self::$configPath ?? $defaultPath;
+
+        if (!is_file($path) && self::$configPath === null && is_file($examplePath)) {
+            @copy($examplePath, $defaultPath);
+            if (!is_file($path)) {
+                $path = $examplePath;
+            }
+        }
 
         if (!is_file($path)) {
             throw new RuntimeException("Arquivo de configuração não encontrado em: {$path}");

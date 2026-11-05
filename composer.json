@@ -2,6 +2,15 @@
     "name": "zait/ztframework",
     "description": "ZTFramework 2.0 - Framework PHP moderno com roteamento declarativo, controllers e segurança avançada.",
     "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Professor Drº Cleber S. Oliveira"
+        },
+        {
+            "name": "Professora Drª Marcia Aparecida Silva Bissaco"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "ext-json": "*",
@@ -14,9 +23,19 @@
             "app\\": "app/"
         }
     },
+    "scripts": {
+        "post-install-cmd": [
+            "@php -r \"file_exists('app/etc/config.json') || copy('app/etc/config.json.example', 'app/etc/config.json');\""
+        ],
+        "post-update-cmd": [
+            "@php -r \"file_exists('app/etc/config.json') || copy('app/etc/config.json.example', 'app/etc/config.json');\""
+        ],
+        "test": "php tests/run_all.php"
+    },
     "config": {
         "sort-packages": true,
         "preferred-install": "dist",
-        "allow-plugins": false
+        "allow-plugins": false,
+        "optimize-autoloader": true
     }
 }

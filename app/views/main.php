@@ -14,6 +14,8 @@ declare(strict_types=1);
  * ============================================================================
  */
 
+use app\core\utils\Url;
+
 $user = $_SESSION['user'] ?? [];
 $grupos = (array)($user['grupos'] ?? []);
 $perfilReq = $_GET['perfil'] ?? null;
@@ -60,7 +62,7 @@ if ($perfilReq !== null) {
 $isAdmin = in_array('admin', $grupos, true);
 $fotoSrc = !empty($user['foto']) ? $user['foto'] : 'https://via.placeholder.com/150?text=Sem+Foto';
 
-$baseHref = \app\core\utils\Url::base();
+$baseHref = Url::base();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

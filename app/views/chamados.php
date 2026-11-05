@@ -14,7 +14,9 @@ declare(strict_types=1);
  * ============================================================================
  */
 
-$baseHref = \app\core\utils\Url::base();
+use app\core\utils\Url;
+
+$baseHref = Url::base();
 $chamados = $chamados ?? [];
 $user = $_SESSION['user'] ?? [];
 ?>

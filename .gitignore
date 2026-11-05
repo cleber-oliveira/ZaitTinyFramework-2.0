@@ -1,7 +1,21 @@
-# Dependências Composer
+# ==============================================================================
+# Zait Tiny Framework 2.0 (ZTFramework) - .gitignore Oficial
+# ==============================================================================
+
+# 1. Arquivos Sensíveis de Configuração (NUNCA versionar credenciais reais)
+/app/etc/config.json
+config.json
+!/app/etc/config.json.example
+!/app/etc/routes.json.example
+!/.htaccess.example
+.env
+.env.*
+!.env.example
+
+# 2. Dependências do Composer
 /vendor/
 
-# Storage de uploads, logs e sessões temporárias
+# 3. Armazenamento Temporário, Uploads Base64, Logs e Sessões
 /app/storage/uploads/*
 !/app/storage/uploads/.gitkeep
 /app/storage/logs/*
@@ -11,7 +25,20 @@
 /storage/uploads/*
 !/storage/uploads/.gitkeep
 
-# Arquivos do Sistema Operacional
+# 4. Arquivos de IDEs e Editores (Eclipse, VS Code, PhpStorm)
+.buildpath
+.project
+.settings/
+.idea/
+.vscode/
+.asciidoctorconfig.adoc
+*.sublime-project
+*.sublime-workspace
+
+# 5. Arquivos de Sistema Operacional e Temporários
 .DS_Store
 Thumbs.db
 *.tmp
+*.bak
+*.swp
+*~

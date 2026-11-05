@@ -19,13 +19,28 @@
 
 ---
 
-### Manual Completo de Uso
+### Instalação e Deploy (GitHub)
+```bash
+# 1. Instale as dependências e gere o autoloader otimizado
+# (Copia automaticamente app/etc/config.json.example -> app/etc/config.json se não existir)
+composer install --optimize-autoloader
+
+# 2. Ajuste suas credenciais de banco de dados e Pepper secreto em:
+# app/etc/config.json
+```
+
+---
+
+### Manual Completo de Uso & Material Didático (Aulas das Classes + Diagramas UML)
 Consulte o guia didático e passo a passo em:
-👉 **[MANUAL.md](MANUAL.md)**
+- 👉 **[MANUAL.md](MANUAL.md)** (Markdown com diagramas e 20 aulas das classes)
+- 👉 **[public/manual.html](public/manual.html)** (Manual Interativo HTML com zoom nos diagramas)
 
 ---
 
 ### Executando os Testes Automatizados
 ```bash
 php tests/run_all.php
+# ou via Composer:
+composer test
 ```

@@ -1,0 +1,32 @@
+{
+  "/": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/home.php",
+      "session": { "required": false }
+    }
+  },
+  "/login": {
+    "get": {
+      "responseType": "html",
+      "path": "app/controllers/login.php",
+      "session": { "required": false }
+    },
+    "post": {
+      "responseType": "json",
+      "path": "app/controllers/loginAuth.php",
+      "session": { "required": false }
+    }
+  },
+  "/dashboard": {
+    "get": {
+      "responseType": "html",
+      "controller": "DashboardController",
+      "action": "index",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      }
+    }
+  }
+}

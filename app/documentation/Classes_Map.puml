@@ -1,0 +1,158 @@
+@startuml Classes_Map
+title ZTFramework 2.0 - Mapa Completo de Classes por Pacote (UML)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam roundcorner 8
+
+package "app\\core\\database" #EEF6FF {
+    class DBConnection {
+        - {static} array $instances
+        + {static} getConnection(?string $name = null): PDO
+        + {static} setConnection(string $name, PDO $pdo): void
+        + {static} closeAll(): void
+    }
+    class DatabaseProvisioner {
+        - {static} bool $provisioned
+        + {static} ensureProvisioned(): array
+        + {static} resetState(): void
+    }
+    class DBQuery {
+        + __construct(string $table, string $fields = '*', ?PDO $db = null)
+        + addCondition(string $logical, string $col, string $op, mixed $val): self
+        + addIn(string $logical, string $col, array $values): self
+        + addJoin(string $type, string $table, string $k1, string $op, string $ft, string $k2): self
+        + joinRaw(string $rawJoin): self
+        + orderBy(string $col, string $dir = 'ASC'): self
+        + limit(int $limit, int $offset = 0): self
+        + select(): array
+        + first(): ?array
+        + insert(array $data): string|int
+        + update(array $data): int
+        + delete(): int
+    }
+}
+
+package "app\\core\\utils" #F4FBF7 {
+    class Config {
+        + {static} get(?string $key = null, mixed $default = null): mixed
+        + {static} has(string $key): bool
+        + {static} set(string $key, mixed $value): void
+        + {static} reload(): void
+    }
+    class Url {
+        + {static} base(): string
+        + {static} rootPath(): string
+        + {static} to(string $path = ''): string
+        + {static} full(string $path = ''): string
+        + {static} asset(string $assetPath): string
+        + {static} redirect(string $path = ''): void
+    }
+    class Router {
+        + __construct(?string $routesFilePath = null, ?string $basePath = null)
+        + dispatch(?string $uri = null, ?string $method = null): mixed
+        + checkAccessControl(array $routeConfig): array
+        + addRoute(string $uri, string $method, array $config): void
+        + getRoutes(): array
+    }
+    class Sanitize {
+        + {static} string(mixed $value): string
+        + {static} email(mixed $value): string
+        + {static} int(mixed $value): int
+        + {static} float(mixed $value): float
+        + {static} alphaNum(mixed $value): string
+        + {static} array(array $data): array
+    }
+    class JsonResponse {
+        + {static} send(bool $status, int $code, string $msg, mixed $data = null, ?string $err = null): string
+        + {static} success(mixed $data = null, string $msg = 'Sucesso', int $code = 200): string
+        + {static} error(int $code, string $err, string $msg, mixed $details = null): string
+    }
+    class PasswordSecurity {
+        + {static} hash(string $plainPassword): string
+        + {static} verify(string $plainPassword, string $hashedPassword): bool
+        + {static} needsRehash(string $hashedPassword): bool
+    }
+    class CodeGenerator {
+        + {static} generatePassword(int $length = 10): string
+        + {static} generateNumericCode(int $digits = 6): string
+        + {static} generateToken(int $bytes = 32): string
+    }
+    class Base64Files {
+        + {static} fileToBase64(string $filePath, bool $withMimePrefix = false): string
+        + {static} base64ToFile(string $base64String, string $outputPath): int
+        + {static} extractMimeType(string $base64DataUri): ?string
+    }
+    class Mail {
+        + setRecipient(string $email, string $name = ''): self
+        + setSubject(string $subject): self
+        + setBody(string $htmlBody, string $altText = ''): self
+        + send(): bool
+        + {static} quickSend(string $to, string $toName, string $subject, string $html): bool
+    }
+    class Sms {
+        + {static} send(string $to, string $message): bool
+    }
+}
+
+package "app\\models" #FFF9EB {
+    class Usuario {
+        + autenticar(string $email, string $senhaPlana): ?array
+        + buscarPorId(int $idUsuario): ?array
+        + buscarPorEmail(string $email): ?array
+        + criarComSenhaTemporaria(string $nome, string $email, array $grupos = ['usuario']): array
+        + atualizarPerfil(int $id, string $nome, ?string $novaSenha = null, ?string $fotoB64 = null): bool
+        + alterarSenhaPorEmail(string $email, string $novaSenhaPlana): bool
+        + obterGrupos(int $idUsuario): array
+        + obterPermissoes(int $idUsuario): array
+        + atribuirGrupo(int $idUsuario, string $nomeGrupo): void
+        + definirGrupos(int $idUsuario, array $nomesGrupos): void
+    }
+}
+
+package "app\\controllers" #FDF2F8 {
+    class DashboardController {
+        + index(): void
+    }
+    class PerfilController {
+        + atualizar(): void
+    }
+    class AdminController {
+        + index(): void
+        + listarUsuarios(): void
+        + salvarGruposUsuario(): void
+        + alternarStatus(): void
+        + gruposEPermissoes(): void
+        + salvarPermissoesGrupo(): void
+    }
+    class FileController {
+        + upload(): void
+        + download(): void
+        + listar(): void
+    }
+    class ChamadoController {
+        + index(): void
+        + criar(): void
+    }
+    class ConsultaController {
+        + consultaDireta(): void
+        + consultaDbQuery(): void
+    }
+}
+
+Router --> DatabaseProvisioner : ensureProvisioned()
+Router --> Config : get()
+Router --> DBConnection : SQL direto
+Router --> DBQuery : dbquery
+Router --> JsonResponse : Respostas JSON
+DBQuery --> DBConnection : getConnection()
+Usuario --> DBQuery : Persistência
+Usuario --> PasswordSecurity : hash() / verify()
+Usuario --> CodeGenerator : generatePassword()
+DashboardController --> Url : redirect()
+PerfilController --> Usuario : atualizarPerfil()
+AdminController --> Usuario : definirGrupos()
+FileController --> DBConnection : ACL de arquivos
+ChamadoController --> DBQuery : JOIN e INSERT
+ConsultaController --> DBQuery : Consulta fluente
+@enduml

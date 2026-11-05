@@ -20,7 +20,7 @@
     "routes": "app/etc/routes.json"
   },
   "security": {
-    "password_pepper": "ZTFramework_Secur3_P3pp3r_#2026!@K9",
+    "password_pepper": "TROQUE_ESTE_PEPPER_SECRETO_EM_PRODUCAO_#2026",
     "bcrypt_cost": 12,
     "sessionName": "ZTSESSID",
     "sessionLifetime": 7200
@@ -56,8 +56,8 @@
         "host": "localhost",
         "port": 3306,
         "dbname": "ztframework",
-        "user": "root",
-        "password": "senha",
+        "user": "SEU_USUARIO_MYSQL",
+        "password": "SUA_SENHA_MYSQL",
         "charset": "utf8mb4"
       },
       "pgsql": {
@@ -65,8 +65,8 @@
         "host": "localhost",
         "port": 5432,
         "dbname": "ztframework",
-        "user": "postgres",
-        "password": "",
+        "user": "SEU_USUARIO_POSTGRES",
+        "password": "SUA_SENHA_POSTGRES",
         "charset": "utf8"
       },
       "oracle": {
@@ -74,8 +74,8 @@
         "host": "localhost",
         "port": 1521,
         "dbname": "XEPDB1",
-        "user": "system",
-        "password": "senha_oracle",
+        "user": "SEU_USUARIO_ORACLE",
+        "password": "SUA_SENHA_ORACLE",
         "charset": "AL32UTF8"
       },
       "db2": {
@@ -83,8 +83,8 @@
         "host": "localhost",
         "port": 50000,
         "dbname": "SAMPLE",
-        "user": "db2inst1",
-        "password": "senha_db2",
+        "user": "SEU_USUARIO_DB2",
+        "password": "SUA_SENHA_DB2",
         "charset": "UTF-8"
       }
     }
@@ -96,8 +96,8 @@
     "host": "sandbox.smtp.mailtrap.io",
     "port": 2525,
     "auth": true,
-    "user": "contato@ztframework.local",
-    "password": "",
+    "user": "SEU_USUARIO_SMTP_OU_MAILTRAP",
+    "password": "SUA_SENHA_SMTP_OU_MAILTRAP",
     "encryption": "tls",
     "from_name": "Zait Tiny Framework 2.0"
   },
@@ -106,9 +106,9 @@
     "simulate_in_dev": true,
     "provider": "twilio",
     "twilio": {
-      "account_sid": "AC_TWILIO_EXEMPLO_ACCOUNT_SID",
-      "auth_token": "TWILIO_EXEMPLO_AUTH_TOKEN",
-      "from_number": "+1234567890"
+      "account_sid": "AC_SEU_TWILIO_ACCOUNT_SID",
+      "auth_token": "SEU_TWILIO_AUTH_TOKEN",
+      "from_number": "+10000000000"
     }
   },
   "cors": {

@@ -10,6 +10,8 @@ declare(strict_types=1);
  *    para localizar qualquer classe, ignorando diferenças de maiúsculas/minúsculas no Linux.
  */
 
+use app\core\utils\Url;
+
 // 1. Carrega Composer se disponível
 if (is_file(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
@@ -20,6 +22,10 @@ spl_autoload_register(static function (string $class): void {
     static $classMap = null;
     $baseDir = __DIR__ . '/app';
 
+    if (!is_dir($baseDir)) {
+        return;
+    }
+
     // A. Tenta resolução direta PSR-4 (alta performance)
     $prefix = 'app\\';
     $len = strlen($prefix);
@@ -29,7 +35,7 @@ spl_autoload_register(static function (string $class): void {
         $directFile = $baseDir . '/' . str_replace('\\', '/', $relativeClass) . '.php';
 
         if (is_file($directFile)) {
-            require $directFile;
+            require_once $directFile;
             return;
         }
     }
@@ -56,32 +62,39 @@ spl_autoload_register(static function (string $class): void {
     $className = end($parts);
     $classNameLower = strtolower($className);
 
-    if (isset($classMap[$className])) {
-        require $classMap[$className];
+    if (isset($classMap[$className]) && is_file($classMap[$className])) {
+        require_once $classMap[$className];
         return;
     }
 
-    if (isset($classMap[$classNameLower])) {
-        require $classMap[$classNameLower];
+    if (isset($classMap[$classNameLower]) && is_file($classMap[$classNameLower])) {
+        require_once $classMap[$classNameLower];
         return;
     }
 });
 
 // 3. Funções Helper Globais de Roteamento e RootPath
+if (is_file(__DIR__ . '/app/core/utils/Config.php')) {
+    require_once __DIR__ . '/app/core/utils/Config.php';
+}
+if (is_file(__DIR__ . '/app/core/utils/Url.php')) {
+    require_once __DIR__ . '/app/core/utils/Url.php';
+}
+
 if (!function_exists('url')) {
     function url(string $path = ''): string {
-        return \app\core\utils\Url::to($path);
+        return Url::to($path);
     }
 }
 
 if (!function_exists('asset')) {
     function asset(string $path): string {
-        return \app\core\utils\Url::asset($path);
+        return Url::asset($path);
     }
 }
 
 if (!function_exists('rootPath')) {
     function rootPath(): string {
-        return \app\core\utils\Url::rootPath();
+        return Url::rootPath();
     }
 }
