@@ -203,8 +203,9 @@ class Router {
             $userId = $userSession['idUsuario'] ?? null;
 
             $isSuperAdmin = in_array('admin', $userGroups, true);
+            $strictGroup = (bool)($routeConfig['strictGroup'] ?? false);
 
-            if (!$isSuperAdmin) {
+            if (!$isSuperAdmin || $strictGroup) {
                 $allowedUsers = $routeConfig['users'] ?? [];
                 if (!empty($allowedUsers) && !in_array($userId, $allowedUsers, true)) {
                     return [

@@ -66,3 +66,22 @@ spl_autoload_register(static function (string $class): void {
         return;
     }
 });
+
+// 3. Funções Helper Globais de Roteamento e RootPath
+if (!function_exists('url')) {
+    function url(string $path = ''): string {
+        return \app\core\utils\Url::to($path);
+    }
+}
+
+if (!function_exists('asset')) {
+    function asset(string $path): string {
+        return \app\core\utils\Url::asset($path);
+    }
+}
+
+if (!function_exists('rootPath')) {
+    function rootPath(): string {
+        return \app\core\utils\Url::rootPath();
+    }
+}

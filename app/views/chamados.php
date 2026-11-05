@@ -14,8 +14,7 @@ declare(strict_types=1);
  * ============================================================================
  */
 
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '/' : rtrim($scriptDir, '/') . '/';
+$baseHref = \app\core\utils\Url::base();
 $chamados = $chamados ?? [];
 $user = $_SESSION['user'] ?? [];
 ?>

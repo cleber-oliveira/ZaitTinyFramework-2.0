@@ -18,8 +18,7 @@ $port = htmlspecialchars((string)($details['port'] ?? '3306'), ENT_QUOTES, 'UTF-
 $user = htmlspecialchars((string)($details['user'] ?? 'root'), ENT_QUOTES, 'UTF-8');
 $dbname = htmlspecialchars((string)($details['dbname'] ?? 'ztframework'), ENT_QUOTES, 'UTF-8');
 $pdoError = htmlspecialchars((string)($details['pdo_error'] ?? $errorInfo['message'] ?? 'Erro desconhecido'), ENT_QUOTES, 'UTF-8');
-$baseHref = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/') . '/';
-if ($baseHref === '//') $baseHref = '/';
+$baseHref = \app\core\utils\Url::base();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

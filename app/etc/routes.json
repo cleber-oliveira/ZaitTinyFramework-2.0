@@ -55,11 +55,105 @@
   "/dashboard": {
     "get": {
       "responseType": "html",
-      "path": "app/views/main.php",
+      "controller": "DashboardController",
+      "action": "index",
       "session": {
         "required": true,
         "keys": ["idUsuario"]
       }
+    }
+  },
+
+  "/dashboard/admin": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main_admin.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["admin"],
+      "strictGroup": true
+    }
+  },
+
+  "/dashboard/gerente": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main_gerente.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["gerente"],
+      "strictGroup": true
+    }
+  },
+
+  "/dashboard/financeiro": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main_financeiro.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["financeiro"],
+      "strictGroup": true
+    }
+  },
+
+  "/dashboard/suporte": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main_suporte.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["suporte"],
+      "strictGroup": true
+    }
+  },
+
+  "/dashboard/usuario": {
+    "get": {
+      "responseType": "html",
+      "path": "app/views/main.php",
+      "session": {
+        "required": true,
+        "keys": ["idUsuario"]
+      },
+      "groups": ["usuario"],
+      "strictGroup": true
+    }
+  },
+
+  "/api/consulta-direta": {
+    "get": {
+      "responseType": "json",
+      "query": {
+        "sql": "SELECT idUsuario, nome, email, status, dataCriacao FROM usuarios ORDER BY idUsuario ASC"
+      },
+      "session": { "required": false }
+    }
+  },
+
+  "/api/consulta-sql": {
+    "get": {
+      "responseType": "json",
+      "controller": "ConsultaController",
+      "action": "consultaDireta",
+      "session": { "required": false }
+    }
+  },
+
+  "/api/consulta-dbquery": {
+    "get": {
+      "responseType": "json",
+      "controller": "ConsultaController",
+      "action": "consultaDbQuery",
+      "session": { "required": false }
     }
   },
 

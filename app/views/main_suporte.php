@@ -15,12 +15,11 @@ declare(strict_types=1);
  */
 
 use app\core\database\DBQuery;
+use app\core\utils\Url;
 
 $user = $_SESSION['user'] ?? [];
 $isAdmin = in_array('admin', (array)($user['grupos'] ?? []), true);
-
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '/' : rtrim($scriptDir, '/') . '/';
+$baseHref = Url::base();
 
 // Métricas de Helpdesk / Suporte via DBQuery
 $totalChamados   = count((new DBQuery('chamados', 'idChamado'))->select());

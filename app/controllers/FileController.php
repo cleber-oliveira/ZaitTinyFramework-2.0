@@ -35,9 +35,24 @@ class FileController {
     private string $storageUploadsDir;
 
     public function __construct() {
-        $this->storageUploadsDir = dirname(__DIR__, 2) . '/storage/uploads';
+        $baseDir = dirname(__DIR__, 2);
+        // Pasta primária de armazenamento em app/storage/uploads
+        $this->storageUploadsDir = $baseDir . '/app/storage/uploads';
+
         if (!is_dir($this->storageUploadsDir)) {
-            @mkdir($this->storageUploadsDir, 0755, true);
+            @mkdir($this->storageUploadsDir, 0777, true);
+        }
+        if (!is_writable($this->storageUploadsDir)) {
+            @chmod($this->storageUploadsDir, 0777);
+        }
+
+        // Garante também storage/uploads para redundância e retrocompatibilidade
+        $legacyDir = $baseDir . '/storage/uploads';
+        if (!is_dir($legacyDir)) {
+            @mkdir($legacyDir, 0777, true);
+        }
+        if (!is_writable($legacyDir)) {
+            @chmod($legacyDir, 0777);
         }
     }
 
@@ -121,7 +136,7 @@ class FileController {
         JsonResponse::success([
             'hash'         => $hash,
             'nomeOriginal' => $nomeOriginal,
-            'url'          => "/arquivo/{$hash}",
+            'url'          => "arquivo/{$hash}",
             'tamanhoBytes' => strlen($decodedBinary)
         ], 'Upload em Base64 realizado com sucesso e regras de ACL gravadas!');
     }

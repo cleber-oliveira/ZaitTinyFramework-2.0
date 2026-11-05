@@ -1,8 +1,13 @@
+<?php
+use app\core\utils\Url;
+$baseHref = Url::base();
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>ZTFramework - Login</title>
+    <base href="<?= htmlspecialchars($baseHref, ENT_QUOTES, 'UTF-8') ?>">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         .card { background: white; padding: 32px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 360px; }
@@ -15,13 +20,15 @@
         .alert { display: none; padding: 10px; margin-bottom: 16px; border-radius: 6px; font-size: 14px; }
         .alert-error { background: #ffebe8; color: #c00; border: 1px solid #dd3c10; }
         .alert-success { background: #e7f3ff; color: #1877f2; border: 1px solid #1877f2; }
+        .link-home { display: block; text-align: center; margin-top: 16px; font-size: 13px; color: #606770; text-decoration: none; }
+        .link-home:hover { text-decoration: underline; color: #1877f2; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>Entrar no Sistema</h2>
         <div id="alertBox" class="alert"></div>
-        <form id="loginForm" method="POST" action="/login">
+        <form id="loginForm" method="POST" action="login">
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email" required autocomplete="email" placeholder="admin@empresa.com">
@@ -31,6 +38,7 @@
                 <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="••••••••">
             </div>
             <button type="submit" id="btnSubmit">Entrar</button>
+            <a href="./" class="link-home">&larr; Voltar à Página Inicial</a>
         </form>
     </div>
 
@@ -46,7 +54,7 @@
             const formData = new FormData(this);
 
             try {
-                const response = await fetch('/login', {
+                const response = await fetch('login', {
                     method: 'POST',
                     body: formData
                 });
@@ -57,7 +65,28 @@
                     alertBox.innerText = result.message || 'Login efetuado com sucesso!';
                     alertBox.style.display = 'block';
                     setTimeout(() => {
-                        window.location.href = result.data?.redirect || '/dashboard';
+                        let redirectUrl = result.data?.redirect || 'dashboard';
+                        if (redirectUrl.startsWith('/')) {
+                            redirectUrl = redirectUrl.substring(1);
+                        }
+                        window.location.href = redirectUrl;
+                    }, 800);
+                } else {
+                    alertBox.className = 'alert alert-error';
+                    alertBox.innerText = result.message || 'Falha ao autenticar.';
+                    alertBox.style.display = 'block';
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = 'Entrar';
+                }
+            } catch (err) {
+                alertBox.className = 'alert alert-error';
+                alertBox.innerText = 'Erro na comunicação com o servidor.';
+                alertBox.style.display = 'block';
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = 'Entrar';
+            }
+        });
+    </script>
                     }, 800);
                 } else {
                     alertBox.className = 'alert alert-error';

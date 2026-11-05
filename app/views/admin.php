@@ -1,7 +1,7 @@
 <?php
+use app\core\utils\Url;
 $user = $_SESSION['user'] ?? [];
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '/' : rtrim($scriptDir, '/') . '/';
+$baseHref = Url::base();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

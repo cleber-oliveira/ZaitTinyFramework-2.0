@@ -47,12 +47,26 @@ $_SESSION['user'] = [
     'permissoes' => (array)$dadosUsuario['permissoes']
 ];
 
-// 4. Retorna resposta JSON direta
+// 4. Determina a página dedicada do perfil para redirecionamento imediato
+$grupos = (array)$dadosUsuario['grupos'];
+$redirect = 'dashboard/usuario';
+if (in_array('admin', $grupos, true)) {
+    $redirect = 'dashboard/admin';
+} elseif (in_array('gerente', $grupos, true)) {
+    $redirect = 'dashboard/gerente';
+} elseif (in_array('financeiro', $grupos, true)) {
+    $redirect = 'dashboard/financeiro';
+} elseif (in_array('suporte', $grupos, true)) {
+    $redirect = 'dashboard/suporte';
+}
+
+// 5. Retorna resposta JSON direta
 JsonResponse::success([
     'usuario' => [
-        'id'    => $dadosUsuario['idUsuario'],
-        'nome'  => $dadosUsuario['nome'],
-        'email' => $dadosUsuario['email']
+        'id'     => $dadosUsuario['idUsuario'],
+        'nome'   => $dadosUsuario['nome'],
+        'email'  => $dadosUsuario['email'],
+        'grupos' => $grupos
     ],
-    'redirect' => '/dashboard'
+    'redirect' => $redirect
 ], 'Autenticado com sucesso!');

@@ -13,7 +13,8 @@ $tests = [
     'test_mail_and_auth.php',
     'test_ajax_and_mimes.php',
     'test_full_workflow.php',
-    'test_security.php'
+    'test_security.php',
+    'test_url_and_endpoints.php'
 ];
 
 $allPassed = true;

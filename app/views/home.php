@@ -1,6 +1,6 @@
 <?php
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '/' : rtrim($scriptDir, '/') . '/';
+use app\core\utils\Url;
+$baseHref = Url::base();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -470,7 +470,11 @@ $(document).ready(function() {
                 if (res.status) {
                     showAlert('Autenticado com sucesso! Redirecionando para o painel...', true);
                     setTimeout(function() {
-                        window.location.href = res.data?.redirect || 'dashboard';
+                        let redirectUrl = res.data?.redirect || 'dashboard';
+                        if (redirectUrl.startsWith('/')) {
+                            redirectUrl = redirectUrl.substring(1);
+                        }
+                        window.location.href = redirectUrl;
                     }, 700);
                 } else {
                     showAlert(res.message || 'Credenciais inválidas.', false);

@@ -60,8 +60,7 @@ if ($perfilReq !== null) {
 $isAdmin = in_array('admin', $grupos, true);
 $fotoSrc = !empty($user['foto']) ? $user['foto'] : 'https://via.placeholder.com/150?text=Sem+Foto';
 
-$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-$baseHref = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '') ? '/' : rtrim($scriptDir, '/') . '/';
+$baseHref = \app\core\utils\Url::base();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

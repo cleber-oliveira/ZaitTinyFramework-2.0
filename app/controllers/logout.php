@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE && php_sapi_name() !== 'cli') {
 
 $_SESSION = [];
 
-if (ini_get("session.use_cookies")) {
+if (ini_get("session.use_cookies") && !headers_sent()) {
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000,
         $params["path"], $params["domain"],
@@ -15,7 +15,10 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-session_destroy();
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_destroy();
+}
 
-header('Location: /login');
-exit;
+use app\core\utils\Url;
+
+Url::redirect('login');
