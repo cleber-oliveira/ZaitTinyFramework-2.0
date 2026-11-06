@@ -60,7 +60,8 @@ if ($perfilReq !== null) {
 }
 
 $isAdmin = in_array('admin', $grupos, true);
-$fotoSrc = !empty($user['foto']) ? $user['foto'] : 'https://via.placeholder.com/150?text=Sem+Foto';
+$defaultAvatarSvg = 'data:image/svg+xml;utf8,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="150" height="150" fill="#e2e8f0"/><circle cx="75" cy="58" r="28" fill="#64748b"/><path d="M25 135c0-28 22-45 50-45s50 17 50 45" fill="#64748b"/></svg>');
+$fotoSrc = !empty($user['foto']) ? $user['foto'] : $defaultAvatarSvg;
 
 $baseHref = Url::base();
 ?>

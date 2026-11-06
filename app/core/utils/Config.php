@@ -67,14 +67,14 @@ class Config {
     /**
      * Recupera um valor de configuração usando notação com ponto.
      * 
-     * @param string $key Chave aninhada (ex: 'app.name', 'database.default')
+     * @param string|null $key Chave aninhada (ex: 'app.name', 'database.default')
      * @param mixed $default Valor padrão caso a chave não exista
      * @return mixed
      */
-    public static function get(string $key, mixed $default = null): mixed {
+    public static function get(?string $key = null, mixed $default = null): mixed {
         $config = self::load();
 
-        if (empty($key)) {
+        if ($key === null || $key === '') {
             return $config;
         }
 
@@ -133,5 +133,13 @@ class Config {
     public static function reset(): void {
         self::$data = null;
         self::$configPath = null;
+    }
+
+    /**
+     * Recarrega a configuração do disco em memória.
+     */
+    public static function reload(): array {
+        self::$data = null;
+        return self::load();
     }
 }

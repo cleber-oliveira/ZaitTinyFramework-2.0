@@ -83,6 +83,12 @@ class AdminController {
             return;
         }
 
+        $idLogado = (int)($_SESSION['user']['idUsuario'] ?? 0);
+        if ($idLogado > 0 && $idUsuario === $idLogado && $novoStatus === 0) {
+            JsonResponse::error(400, 'ERR_SELF_DEACTIVATE', 'Você não pode inativar sua própria conta de administrador.');
+            return;
+        }
+
         $usuarioModel = new Usuario();
         $usuarioModel->alternarStatus($idUsuario, $novoStatus);
 

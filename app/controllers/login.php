@@ -87,22 +87,5 @@ $baseHref = Url::base();
             }
         });
     </script>
-                    }, 800);
-                } else {
-                    alertBox.className = 'alert alert-error';
-                    alertBox.innerText = result.message || 'Falha ao autenticar.';
-                    alertBox.style.display = 'block';
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerText = 'Entrar';
-                }
-            } catch (err) {
-                alertBox.className = 'alert alert-error';
-                alertBox.innerText = 'Erro na comunicação com o servidor.';
-                alertBox.style.display = 'block';
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = 'Entrar';
-            }
-        });
-    </script>
 </body>
 </html>

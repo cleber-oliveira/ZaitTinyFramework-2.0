@@ -118,7 +118,7 @@ $baseHref = Url::base();
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
-            <a href="https://github.com/google/antigravity" target="_blank" class="text-muted small text-decoration-none">Documentação do Framework</a>
+            <a href="public/manual.html" target="_blank" class="text-muted small text-decoration-none">📘 Manual do Framework</a>
             <button onclick="window.location.reload();" class="btn btn-primary px-4">
                 Tentar Reconectar Agora
             </button>

@@ -22,9 +22,15 @@ class Base64Files {
     private string $storageDir;
 
     public function __construct(?string $storageDir = null) {
-        $this->storageDir = $storageDir ?? Config::get('paths.storage', 'app/storage') . '/uploads';
+        if ($storageDir !== null) {
+            $this->storageDir = $storageDir;
+        } else {
+            $baseDir = dirname(__DIR__, 3);
+            $relStorage = (string)Config::get('paths.storage', 'app/storage');
+            $this->storageDir = $baseDir . '/' . trim($relStorage, '/') . '/uploads';
+        }
         if (!is_dir($this->storageDir)) {
-            @mkdir($this->storageDir, 0755, true);
+            @mkdir($this->storageDir, 0777, true);
         }
     }
 
@@ -80,5 +86,49 @@ class Base64Files {
         $base64 = (string)file_get_contents($path);
         $binary = base64_decode($base64, true);
         return $binary !== false ? $binary : null;
+    }
+
+    /**
+     * Converte um arquivo físico do disco para string Base64 (opcionalmente com prefixo Data URI).
+     */
+    public static function fileToBase64(string $filePath, bool $withMimePrefix = false): string {
+        if (!is_file($filePath)) {
+            throw new RuntimeException("Arquivo não encontrado: {$filePath}");
+        }
+        $binary = (string)file_get_contents($filePath);
+        $b64 = base64_encode($binary);
+        if ($withMimePrefix) {
+            $mime = mime_content_type($filePath) ?: 'application/octet-stream';
+            return "data:{$mime};base64,{$b64}";
+        }
+        return $b64;
+    }
+
+    /**
+     * Decodifica uma string Base64 (ou Data URI) e grava como arquivo binário no caminho de destino.
+     */
+    public static function base64ToFile(string $base64String, string $outputPath): int {
+        if (preg_match('/^data:([a-zA-Z0-9\/\+_\-\.]+);base64,/', $base64String, $matches)) {
+            $base64String = substr($base64String, strlen($matches[0]));
+        }
+        $binary = base64_decode($base64String, true);
+        if ($binary === false) {
+            throw new RuntimeException("Conteúdo Base64 inválido.");
+        }
+        $bytes = file_put_contents($outputPath, $binary);
+        if ($bytes === false) {
+            throw new RuntimeException("Falha ao gravar arquivo em: {$outputPath}");
+        }
+        return $bytes;
+    }
+
+    /**
+     * Extrai o MIME type de uma Data URI Base64 (ex: 'image/png').
+     */
+    public static function extractMimeType(string $base64DataUri): ?string {
+        if (preg_match('/^data:([a-zA-Z0-9\/\+_\-\.]+);base64,/', $base64DataUri, $matches)) {
+            return $matches[1];
+        }
+        return null;
     }
 }

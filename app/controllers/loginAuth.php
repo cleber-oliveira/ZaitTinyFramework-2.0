@@ -40,11 +40,13 @@ if (!$dadosUsuario) {
 
 // 3. Popula a estrutura rica de sessão
 $_SESSION['user'] = [
-    'idUsuario'  => $dadosUsuario['idUsuario'],
-    'nome'       => $dadosUsuario['nome'],
-    'email'      => $dadosUsuario['email'],
-    'grupos'     => (array)$dadosUsuario['grupos'],
-    'permissoes' => (array)$dadosUsuario['permissoes']
+    'idUsuario'      => $dadosUsuario['idUsuario'],
+    'nome'           => $dadosUsuario['nome'],
+    'email'          => $dadosUsuario['email'],
+    'foto'           => $dadosUsuario['foto'] ?? null,
+    'primeiroAcesso' => $dadosUsuario['primeiroAcesso'] ?? 0,
+    'grupos'         => (array)$dadosUsuario['grupos'],
+    'permissoes'     => (array)$dadosUsuario['permissoes']
 ];
 
 // 4. Determina a página dedicada do perfil para redirecionamento imediato

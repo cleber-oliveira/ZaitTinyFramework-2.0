@@ -244,4 +244,41 @@ class Usuario {
             ->addCondition('AND', 'idUsuario', '=', $idUsuario)
             ->update(['status' => $novoStatus]);
     }
+
+    /**
+     * Retorna a lista de nomes dos grupos associados ao usuário.
+     */
+    public function obterGrupos(int $idUsuario): array {
+        $rows = (new DBQuery('grupos g', 'g.grupo'))
+            ->joinRaw('INNER JOIN usuariosGrupos ug ON ug.idGrupo = g.idGrupo')
+            ->addCondition('AND', 'ug.idUsuario', '=', $idUsuario)
+            ->select();
+        return array_column($rows, 'grupo');
+    }
+
+    /**
+     * Retorna a lista de permissões granulares associadas ao usuário.
+     */
+    public function obterPermissoes(int $idUsuario): array {
+        $rows = (new DBQuery('permissoes p', 'DISTINCT p.permissao'))
+            ->joinRaw('INNER JOIN gruposPermissoes gp ON gp.idPermissao = p.idPermissao')
+            ->joinRaw('INNER JOIN usuariosGrupos ug ON ug.idGrupo = gp.idGrupo')
+            ->addCondition('AND', 'ug.idUsuario', '=', $idUsuario)
+            ->select();
+        return array_column($rows, 'permissao');
+    }
+
+    /**
+     * Alias didático para cadastrarComSenhaAutomatica().
+     */
+    public function criarComSenhaTemporaria(string $nome, string $email): array {
+        return $this->cadastrarComSenhaAutomatica($nome, $email);
+    }
+
+    /**
+     * Alias didático para redefinirSenhaPorEmail().
+     */
+    public function alterarSenhaPorEmail(string $email, string $novaSenha): bool {
+        return $this->redefinirSenhaPorEmail($email, $novaSenha);
+    }
 }

@@ -33,7 +33,8 @@ class DatabaseProvisioner {
         'permissoes',
         'usuariosGrupos',
         'gruposPermissoes',
-        'arquivosUpload'
+        'arquivosUpload',
+        'chamados'
     ];
 
     /**
@@ -225,5 +226,21 @@ class DatabaseProvisioner {
      */
     public static function clearCache(): void {
         self::$cachedStatus = null;
+    }
+
+    /**
+     * Alias didático para checkAndProvision().
+     */
+    public static function ensureProvisioned(?string $connectionName = null, bool $forceRecheck = false): array {
+        $res = self::checkAndProvision($connectionName, $forceRecheck);
+        $res['status'] = $res['ok'] ?? false;
+        return $res;
+    }
+
+    /**
+     * Alias didático para clearCache().
+     */
+    public static function resetState(): void {
+        self::clearCache();
     }
 }

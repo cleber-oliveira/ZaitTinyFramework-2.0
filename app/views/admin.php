@@ -148,8 +148,9 @@ $(document).ready(function() {
                     return;
                 }
 
+                const defaultSmallAvatar = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38"><rect width="38" height="38" rx="19" fill="#0d6efd"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="16" font-weight="bold">U</text></svg>');
                 res.data.forEach(function(u) {
-                    const avatar = u.foto ? u.foto : 'https://via.placeholder.com/38?text=U';
+                    const avatar = u.foto ? u.foto : defaultSmallAvatar;
                     const isAtivo = parseInt(u.status) === 1;
                     const statusBadge = isAtivo 
                         ? '<span class="badge bg-success">Ativo</span>' 

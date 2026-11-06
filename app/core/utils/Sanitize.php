@@ -63,6 +63,13 @@ class Sanitize {
     }
 
     /**
+     * Mantém apenas caracteres alfanuméricos, underscores e hífens.
+     */
+    public static function alphaNum(mixed $value): string {
+        return (string)preg_replace('/[^a-zA-Z0-9_\-]/', '', (string)$value);
+    }
+
+    /**
      * Sanitiza recursivamente um array de dados (ex: $_POST).
      */
     public static function array(array $data): array {

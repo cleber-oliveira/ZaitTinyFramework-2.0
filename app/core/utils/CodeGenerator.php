@@ -55,6 +55,13 @@ class CodeGenerator {
     }
 
     /**
+     * Alias didático para generateSecureToken().
+     */
+    public static function generateToken(int $bytes = 32): string {
+        return self::generateSecureToken($bytes);
+    }
+
+    /**
      * Gera um código numérico de tamanho fixo (ideal para validação 2FA / OTP / SMS).
      */
     public static function generateNumericCode(int $digits = 6): string {

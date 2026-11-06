@@ -30,6 +30,9 @@ use Throwable;
 class Mail {
     private PHPMailer $mailer;
     private bool $simulateMode;
+    private string $fluentTo = '';
+    private string $fluentSubject = '';
+    private string $fluentBody = '';
 
     public function __construct() {
         $mailConfig = (array)Config::get('mail', []);
@@ -67,15 +70,43 @@ class Mail {
     }
 
     /**
+     * Define o destinatário (interface fluente).
+     */
+    public function setRecipient(string $email, string $name = ''): self {
+        $this->fluentTo = $email;
+        return $this;
+    }
+
+    /**
+     * Define o assunto do e-mail (interface fluente).
+     */
+    public function setSubject(string $subject): self {
+        $this->fluentSubject = $subject;
+        return $this;
+    }
+
+    /**
+     * Define o corpo HTML do e-mail (interface fluente).
+     */
+    public function setBody(string $htmlBody, string $altText = ''): self {
+        $this->fluentBody = $htmlBody;
+        return $this;
+    }
+
+    /**
      * Envia um e-mail formatado.
      * 
-     * @param string $to Destinatário
-     * @param string $subject Assunto
-     * @param string $htmlBody Conteúdo em HTML
+     * @param string|null $to Destinatário (ou usa o definido via setRecipient)
+     * @param string|null $subject Assunto (ou usa o definido via setSubject)
+     * @param string|null $htmlBody Conteúdo em HTML (ou usa o definido via setBody)
      * @param array $attachments Lista opcional de caminhos de arquivos anexos
      * @return bool
      */
-    public function send(string $to, string $subject, string $htmlBody, array $attachments = []): bool {
+    public function send(?string $to = null, ?string $subject = null, ?string $htmlBody = null, array $attachments = []): bool {
+        $to       = $to ?? $this->fluentTo;
+        $subject  = $subject ?? $this->fluentSubject;
+        $htmlBody = $htmlBody ?? $this->fluentBody;
+
         $mailConfig = (array)Config::get('mail', []);
         $enabled = (bool)($mailConfig['enabled'] ?? false);
 
@@ -122,9 +153,13 @@ class Mail {
 
     /**
      * Método estático facilitador para envio rápido de e-mails em HTML.
+     * Suporta 3 argumentos ($to, $subject, $htmlBody) ou 4 argumentos ($toEmail, $toName, $subject, $htmlBody).
      */
-    public static function quickSend(string $to, string $subject, string $htmlBody): bool {
+    public static function quickSend(string $to, string $subjectOrName, string $htmlBodyOrSubject, ?string $optionalBody = null): bool {
         $mail = new self();
-        return $mail->send($to, $subject, $htmlBody);
+        if ($optionalBody !== null) {
+            return $mail->send($to, $htmlBodyOrSubject, $optionalBody);
+        }
+        return $mail->send($to, $subjectOrName, $htmlBodyOrSubject);
     }
 }

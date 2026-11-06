@@ -63,6 +63,17 @@ class Router {
         return $this->routes;
     }
 
+    /**
+     * Registra ou sobrescreve uma rota dinamicamente em tempo de execução.
+     */
+    public function addRoute(string $uri, string $method, array $config): void {
+        $normalized = '/' . trim($uri, '/');
+        if ($normalized === '//') {
+            $normalized = '/';
+        }
+        $this->routes[$normalized][strtolower($method)] = $config;
+    }
+
     public function isAjaxRequest(): bool {
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             return true;

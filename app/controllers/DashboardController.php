@@ -26,6 +26,13 @@ class DashboardController {
     public function index(): void {
         $user = $_SESSION['user'] ?? [];
         $grupos = (array)($user['grupos'] ?? []);
+        $perfilReq = $_GET['perfil'] ?? null;
+
+        // Se houver alternância explícita via ?perfil= (ex: Meu Perfil ou Simulação de Admin), delega para main.php
+        if ($perfilReq !== null && $perfilReq !== '') {
+            require dirname(__DIR__) . '/views/main.php';
+            return;
+        }
 
         $perfil = 'usuario';
         if (in_array('admin', $grupos, true)) {
